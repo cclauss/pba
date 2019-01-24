@@ -1,5 +1,5 @@
 tensorflow-gpu
-ray=0.6.0
+ray==0.6.0
 jupyter
 requests
 pillow
