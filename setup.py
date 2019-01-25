@@ -120,7 +120,7 @@ def create_hparams(state, FLAGS):
         hparams.add_hparam('wrn_depth', 40)
         hparams.add_hparam('lr', 0.1)
         hparams.add_hparam('weight_decay_rate', 5e-4)
-    if FLAGS.model_name == 'wrn_28_10':
+    elif FLAGS.model_name == 'wrn_28_10':
         hparams.add_hparam('model_name', 'wrn')
         epochs = 200
         hparams.add_hparam('wrn_size', 160)
