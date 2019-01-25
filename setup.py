@@ -8,7 +8,7 @@ import random
 
 def create_parser(state, verbose=True):
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model_name', default='wrn', choices=('wrn', 'shake_shake_32',
+    parser.add_argument('--model_name', default='wrn', choices=('wrn_28_10', 'wrn_40_2', 'shake_shake_32',
                                                                 'shake_shake_96', 'shake_shake_112', 'pyramid_net', 'resnet'))
     parser.add_argument('--data_path', default='/tmp/datasets/',
                         help='Directory where dataset is located.')
@@ -27,10 +27,6 @@ def create_parser(state, verbose=True):
                         help="Allocated by Ray")
     parser.add_argument('--gpu', type=float, default=1,
                         help="Allocated by Ray")
-    parser.add_argument('--resnet_size', type=int, default=32,
-                        help="number of filters for resnet")
-    parser.add_argument('--wrn_depth', type=int, default=28,
-                        help="depth of wideresnet (normal fixed to 20)")
     parser.add_argument('--aug_policy', type=str, default="cifar10",
                         help="which augmentation policy to use (in augmentation_transforms_hp.py)")
     # search-use only
@@ -117,11 +113,18 @@ def create_hparams(state, FLAGS):
     else:
         raise ValueError("unknown state")
 
-    if FLAGS.model_name == 'wrn':
+    if FLAGS.model_name == 'wrn_40_2':
         hparams.add_hparam('model_name', 'wrn')
         epochs = 200
-        hparams.add_hparam('wrn_size', FLAGS.resnet_size)
-        hparams.add_hparam('wrn_depth', FLAGS.wrn_depth)
+        hparams.add_hparam('wrn_size', 32)
+        hparams.add_hparam('wrn_depth', 40)
+        hparams.add_hparam('lr', 0.1)
+        hparams.add_hparam('weight_decay_rate', 5e-4)
+    if FLAGS.model_name == 'wrn_28_10':
+        hparams.add_hparam('model_name', 'wrn')
+        epochs = 200
+        hparams.add_hparam('wrn_size', 160)
+        hparams.add_hparam('wrn_depth', 28)
         hparams.add_hparam('lr', 0.1)
         hparams.add_hparam('weight_decay_rate', 5e-4)
     elif FLAGS.model_name == 'resnet':
