@@ -39,36 +39,36 @@ wrn_28_10_eval() {
 }
 
 if [ "$@" = "sm-1" ]; then
-    echo "[bash] sm-1"
+    echo "[bash] $@"
     wrn_40_2_eval cifar10 5
     wrn_40_2_eval 11-23 5
-elif [ "$@" = "sm-1" ]; then
-    echo "[bash] sm-1"
+elif [ "$@" = "sm-2" ]; then
+    echo "[bash] $@"
     wrn_40_2_eval 11-26 5
     wrn_40_2_eval 11-29-a 5
-elif [ "$@" = "sm-1" ]; then
-    echo "[bash] sm-1"
+elif [ "$@" = "sm-3" ]; then
+    echo "[bash] $@"
     wrn_40_2_eval 12-24-a 5
     wrn_40_2_eval 12-24-b 5
-elif [ "$@" = "sm-1" ]; then
-    echo "[bash] sm-1"
+elif [ "$@" = "sm-4" ]; then
+    echo "[bash] $@"
     wrn_40_2_eval 12-24-c 5
     wrn_40_2_eval 12-24-d 5
-elif [ "$@" = "sm-1" ]; then
-    echo "[bash] sm-1"
+elif [ "$@" = "sm-5" ]; then
+    echo "[bash] $@"
     wrn_40_2_eval 12-26-a 5
     wrn_40_2_eval 12-26-b 5
-elif [ "$@" = "sm-1" ]; then
-    echo "[bash] sm-1"
+elif [ "$@" = "sm-6" ]; then
+    echo "[bash] $@"
     wrn_40_2_eval 12-26-c 5
     wrn_40_2_eval 1-15-a 5
-elif [ "$@" = "sm-1" ]; then
-    echo "[bash] sm-1"
+elif [ "$@" = "sm-7" ]; then
+    echo "[bash] $@"
     wrn_40_2_eval 11-28-a 5
     wrn_40_2_eval 11-28-b 5
 
 elif [ "$@" = "lg-1" ]; then
-    echo "lg-1"
+    echo "[bash] $@"
 else
     echo "invalid args"
 fi
