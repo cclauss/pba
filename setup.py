@@ -168,4 +168,6 @@ def create_hparams(state, FLAGS):
         tf.logging.info("overwriting with custom epochs")
         epochs = FLAGS.epochs
     hparams.add_hparam('num_epochs', epochs)
+    tf.logging.info("epochs: {}, lr: {}, wd: {}".format(
+        hparams.num_epochs, hparams.lr, hparams.weight_decay_rate))
     return hparams

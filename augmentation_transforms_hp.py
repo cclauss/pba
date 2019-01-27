@@ -179,9 +179,33 @@ def apply_policy(policy, img, aug_policy):
       The result of applying `policy` to `img`.
     """
     if aug_policy == "cifar10":
-        count = np.random.choice([0, 1, 2, 3], p=[0.2, 0.3, 0.5, 0.0])
+        count = np.random.choice([0, 1, 2, 3], p=[0.2, 0.3, 0.5, 0.0]) # 0.5 + 0.6 = 1.1
+    elif aug_policy == "11-23":
+        count = np.random.choice([0, 1, 2, 3], p=[0.2, 0.3, 0.4, 0.1]) # 1.4
+    elif aug_policy == "11-26":
+        count = np.random.choice([0, 1, 2, 3, 4], p=[0.25, 0.25, 0.25, 0.25, 0]) # 1.5
     elif aug_policy == "11-29-a":
         count = np.random.choice([0, 1, 2, 3], p=[0.3, 0.3, 0.3, 0.1])
+    elif aug_policy == "12-24-a":
+        count = np.random.choice([0, 1, 2], p=[0.291, 0.469, 0.240]) # based on autoaugment, 0.949
+    elif aug_policy == "12-24-b":
+        count = np.random.choice([0, 1, 2, 3, 4, 5], p=[0.3, 0.3, 0.25, 0.12, 0.02, 0.01]) # 1.29, theroy: tiny % of large
+    elif aug_policy == "12-24-c":
+        count = np.random.choice([0, 1, 2, 3, 4, 5], p=[0.3, 0.3, 0.20, 0.125, 0.05, 0.025]) # 1.4, theory: small % of large
+    elif aug_policy == "12-24-d":
+        count = np.random.choice([0, 1, 2, 3, 4], p=[0.3, 0.4, 0.2, 0.075, 0.025]) # 1.125, theroy: low average but outliers
+    elif aug_policy == "12-26-a":
+        count = np.random.choice([0, 1, 2, 3, 4], p=[0.3, 0.35, 0.2, 0.1, 0.05]) # 1.25 bad
+    elif aug_policy == "12-26-b":
+        count = np.random.choice([0, 1, 2, 3, 4], p=[0.3, 0.45, 0.15, 0.075, 0.025]) # 1.075 bad
+    elif aug_policy == "12-26-c":
+        count = np.random.choice([0, 1, 2, 3, 4], p=[0.3, 0.425, 0.2, 0.05, 0.025]) # 1.075
+    elif aug_policy == "11-28-a":
+        count = np.random.choice([0, 1, 2, 3], p=[0.3, 0.4, 0.2, 0.1]) # 1.2
+    elif aug_policy == "11-28-b":
+        count = np.random.choice([0, 1, 2, 3], p=[0.3, 0.45, 0.2, 0.05]) # 1.2
+    elif aug_policy == "1-15-a":
+        count = np.random.choice([0, 1, 2], p=[0.3, 0.5, 0.2]) # 0.9
     else:
         raise ValueError("unknown aug policy")
     if count != 0:
