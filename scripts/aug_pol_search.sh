@@ -72,46 +72,46 @@ elif [ "$@" = "sm-7" ]; then
 
 elif [ "$@" = "lg-1" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval cifar10 2
+    wrn_28_10_eval cifar10 1
 elif [ "$@" = "lg-2" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval 11-23 2
+    wrn_28_10_eval 11-23 1
 elif [ "$@" = "lg-3" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval 11-26 2
+    wrn_28_10_eval 11-26 1
 elif [ "$@" = "lg-4" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval 11-29-a 2
+    wrn_28_10_eval 11-29-a 1
 elif [ "$@" = "lg-5" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval 12-24-a 2
+    wrn_28_10_eval 12-24-a 1
 elif [ "$@" = "lg-6" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval 12-24-b 2
+    wrn_28_10_eval 12-24-b 1
 elif [ "$@" = "lg-7" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval 12-24-c 2
+    wrn_28_10_eval 12-24-c 1
 elif [ "$@" = "lg-8" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval 12-24-d 2
+    wrn_28_10_eval 12-24-d 1
 elif [ "$@" = "lg-9" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval 12-26-a 2
+    wrn_28_10_eval 12-26-a 1
 elif [ "$@" = "lg-10" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval 12-26-b 2
+    wrn_28_10_eval 12-26-b 1
 elif [ "$@" = "lg-11" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval 12-26-c 2
+    wrn_28_10_eval 12-26-c 1
 elif [ "$@" = "lg-12" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval 1-15-a 2
+    wrn_28_10_eval 1-15-a 1
 elif [ "$@" = "lg-13" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval 11-28-a 2
+    wrn_28_10_eval 11-28-a 1
 elif [ "$@" = "lg-14" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval 11-28-b 2
+    wrn_28_10_eval 11-28-b 1
 
 else
     echo "invalid args"
