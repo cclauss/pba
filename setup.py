@@ -60,7 +60,7 @@ def create_parser(state, verbose=True):
     else:
         raise ValueError("unknown state")
     args = parser.parse_args()
-    tf.logging.info(args)
+    tf.logging.info(str(args))
     return args
 
 
