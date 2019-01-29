@@ -2,9 +2,15 @@
 export PYTHONPATH="$(pwd)"
 export OMP_NUM_THREADS=2
 
+# FLAGS:
+# [$1 run name] [$2 number of runs]
+
 # example:
 # CUDA_VISIBLE_DEVICES=0 ./scripts/aug_pol_search.sh sm-2 2>&1 |tee aug_search-2.txt
+# CUDA_VISIBLE_DEVICES=0 ./scripts/aug_pol_search.sh lg-1 2>&1 |tee aug_search_lg-1.txt
+# CUDA_VISIBLE_DEVICES=0 ./scripts/aug_pol_search.sh lg-5 > aug_search_lg-5.txt 2>&1 &
 
+# arguments: [$1 aug_policy] [$2 number of runs]
 wrn_40_2_eval() {
     for i in $(seq 1 $2)
     do
@@ -23,6 +29,7 @@ wrn_40_2_eval() {
     done
 }
 
+# arguments: [$1 aug_policy] [$2 number of runs]
 wrn_28_10_eval() {
     for i in $(seq 1 $2)
     do
@@ -41,77 +48,77 @@ wrn_28_10_eval() {
     done
 }
 
-if [ "$@" = "sm-1" ]; then
+if [ "$1" = "sm-1" ]; then
     echo "[bash] $@"
-    wrn_40_2_eval cifar10 5
-    wrn_40_2_eval 11-23 5
-elif [ "$@" = "sm-2" ]; then
+    wrn_40_2_eval cifar10 $2
+    wrn_40_2_eval 11-23 $2
+elif [ "$1" = "sm-2" ]; then
     echo "[bash] $@"
-    wrn_40_2_eval 11-26 5
-    wrn_40_2_eval 11-29-a 5
-elif [ "$@" = "sm-3" ]; then
+    wrn_40_2_eval 11-26 $2
+    wrn_40_2_eval 11-29-a $2
+elif [ "$1" = "sm-3" ]; then
     echo "[bash] $@"
-    wrn_40_2_eval 12-24-a 5
-    wrn_40_2_eval 12-24-b 5
-elif [ "$@" = "sm-4" ]; then
+    wrn_40_2_eval 12-24-a $2
+    wrn_40_2_eval 12-24-b $2
+elif [ "$1" = "sm-4" ]; then
     echo "[bash] $@"
-    wrn_40_2_eval 12-24-c 5
-    wrn_40_2_eval 12-24-d 5
-elif [ "$@" = "sm-5" ]; then
+    wrn_40_2_eval 12-24-c $2
+    wrn_40_2_eval 12-24-d $2
+elif [ "$1" = "sm-5" ]; then
     echo "[bash] $@"
-    wrn_40_2_eval 12-26-a 5
-    wrn_40_2_eval 12-26-b 5
-elif [ "$@" = "sm-6" ]; then
+    wrn_40_2_eval 12-26-a $2
+    wrn_40_2_eval 12-26-b $2
+elif [ "$1" = "sm-6" ]; then
     echo "[bash] $@"
-    wrn_40_2_eval 12-26-c 5
-    wrn_40_2_eval 1-15-a 5
-elif [ "$@" = "sm-7" ]; then
+    wrn_40_2_eval 12-26-c $2
+    wrn_40_2_eval 1-15-a $2
+elif [ "$1" = "sm-7" ]; then
     echo "[bash] $@"
-    wrn_40_2_eval 11-28-a 5
-    wrn_40_2_eval 11-28-b 5
+    wrn_40_2_eval 11-28-a $2
+    wrn_40_2_eval 11-28-b $2
 
-elif [ "$@" = "lg-1" ]; then
+elif [ "$1" = "lg-1" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval cifar10 2
-elif [ "$@" = "lg-2" ]; then
+    wrn_28_10_eval cifar10 $2
+elif [ "$1" = "lg-2" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval 11-23 2
-elif [ "$@" = "lg-3" ]; then
+    wrn_28_10_eval 11-23 $2
+elif [ "$1" = "lg-3" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval 11-26 2
-elif [ "$@" = "lg-4" ]; then
+    wrn_28_10_eval 11-26 $2
+elif [ "$1" = "lg-4" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval 11-29-a 2
-elif [ "$@" = "lg-5" ]; then
+    wrn_28_10_eval 11-29-a $2
+elif [ "$1" = "lg-5" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval 12-24-a 2
-elif [ "$@" = "lg-6" ]; then
+    wrn_28_10_eval 12-24-a $2
+elif [ "$1" = "lg-6" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval 12-24-b 2
-elif [ "$@" = "lg-7" ]; then
+    wrn_28_10_eval 12-24-b $2
+elif [ "$1" = "lg-7" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval 12-24-c 2
-elif [ "$@" = "lg-8" ]; then
+    wrn_28_10_eval 12-24-c $2
+elif [ "$1" = "lg-8" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval 12-24-d 2
-elif [ "$@" = "lg-9" ]; then
+    wrn_28_10_eval 12-24-d $2
+elif [ "$1" = "lg-9" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval 12-26-a 2
-elif [ "$@" = "lg-10" ]; then
+    wrn_28_10_eval 12-26-a $2
+elif [ "$1" = "lg-10" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval 12-26-b 2
-elif [ "$@" = "lg-11" ]; then
+    wrn_28_10_eval 12-26-b $2
+elif [ "$1" = "lg-11" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval 12-26-c 2
-elif [ "$@" = "lg-12" ]; then
+    wrn_28_10_eval 12-26-c $2
+elif [ "$1" = "lg-12" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval 1-15-a 2
-elif [ "$@" = "lg-13" ]; then
+    wrn_28_10_eval 1-15-a $2
+elif [ "$1" = "lg-13" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval 11-28-a 2
-elif [ "$@" = "lg-14" ]; then
+    wrn_28_10_eval 11-28-a $2
+elif [ "$1" = "lg-14" ]; then
     echo "[bash] $@"
-    wrn_28_10_eval 11-28-b 2
+    wrn_28_10_eval 11-28-b $2
 
 else
     echo "invalid args"
