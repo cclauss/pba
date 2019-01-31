@@ -38,8 +38,11 @@ def main(_):
     if FLAGS.restore:
         train_spec["restore"] = FLAGS.restore
 
-    train_spec["config"]["lr"] = grid_search([0.0125, 0.025, 0.05, 0.1, 0.2])
-    train_spec["config"]["wd"] = grid_search([0.0005, 0.00125, 0.0025, 0.005, 0.01, 0.02])
+    train_spec["config"]["lr"] = grid_search([0.25, 0.5, 1.0, 2.0])
+    train_spec["config"]["wd"] = grid_search([0.0005, 0.001, 0.00125, 0.0025, 0.005, 0.01])
+
+    # train_spec["config"]["lr"] = grid_search([0.0125, 0.025, 0.05, 0.1, 0.2])
+    # train_spec["config"]["wd"] = grid_search([0.0005, 0.00125, 0.0025, 0.005, 0.01, 0.02])
 
     ray.init()
     run_experiments({FLAGS.name: train_spec}, verbose=False)

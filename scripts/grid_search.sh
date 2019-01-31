@@ -7,7 +7,7 @@ export OMP_NUM_THREADS=2
 wrn_40_2_grid_search() {
     echo "[bash] Grid Search w/ wrn_40_2, policy ${1}"
     python grid_search.py \
-    --local_dir /data/dho/ray_results_2/grid_search \
+    --local_dir /data/dho/ray_results_2/grid_search_2 \
     --model_name wrn_40_2 \
     --data_path /data/dho/datasets/cifar-10-batches-py --dataset cifar10 \
     --train_size 4000 --val_size 0 --eval_test \
