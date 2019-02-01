@@ -52,9 +52,9 @@ def create_parser(state, verbose=True):
         parser.add_argument('--flatten', action='store_true',
                             help="randomly select aug policy from schedule")
         parser.add_argument('--name', type=str, default='autoaug')
+        parser.add_argument('--num_samples', type=int, default=2)
 
     elif state == "search":
-        parser.add_argument('--num_samples', type=int, default=2)
         parser.add_argument('--perturbation_interval', type=int, default=10)
         parser.add_argument('--name', type=str, default='autoaug_pbt')
     else:
@@ -85,6 +85,7 @@ def create_hparams(state, FLAGS):
     if state == "train":
         hparams.add_hparam('no_aug', FLAGS.no_aug)
         hparams.add_hparam('use_hp_policy', FLAGS.use_hp_policy)
+        hparams.add_hparam('num_samples', FLAGS.use_hp_policy)
         if FLAGS.use_hp_policy:
             if FLAGS.hp_policy == "random":
                 tf.logging.info("RANDOM SEARCH")

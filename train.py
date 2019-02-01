@@ -57,6 +57,7 @@ def main(_):
         "config": hparams.values(),
         "local_dir": FLAGS.local_dir,
         "checkpoint_freq": FLAGS.checkpoint_freq,
+        "num_samples": FLAGS.num_samples
     }
 
     if FLAGS.restore:
