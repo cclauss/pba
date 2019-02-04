@@ -102,9 +102,9 @@ def eval_child_model(session, model, data_loader, mode, metric=True):
             correct += np.sum(np.equal(np.argmax(eval_labels,
                                                  1), np.argmax(preds, 1)))
             count += len(preds)
-        # assert (count == 10000) or (count == 26032), count
+        assert count == len(images)
         tf.logging.info("correct: {}, total: {}".format(correct, count))
-        return correct/len(images)
+        return correct/count
 
 
 def cosine_lr(learning_rate, epoch, iteration, batches_per_epoch, total_epochs):

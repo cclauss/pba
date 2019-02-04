@@ -8,7 +8,14 @@ export OMP_NUM_THREADS=2
 # example:
 # CUDA_VISIBLE_DEVICES=0 ./scripts/aug_pol_search.sh sm-2 2>&1 |tee aug_search-2.txt
 # CUDA_VISIBLE_DEVICES=0 ./scripts/aug_pol_search.sh lg-1 2>&1 |tee aug_search_lg-1.txt
-# CUDA_VISIBLE_DEVICES=0 ./scripts/aug_pol_search.sh lg-5 > aug_search_lg-5.txt 2>&1 &
+# CUDA_VISIBLE_DEVICES=0 ./scripts/aug_pol_search.sh lg-2 2 > aug_search_lg-2-pt2.txt 2>&1 &
+# CUDA_VISIBLE_DEVICES=5 ./scripts/aug_pol_search.sh lg-2 1 > aug_search_lg-2-pt3.txt 2>&1 &
+# CUDA_VISIBLE_DEVICES=1 ./scripts/aug_pol_search.sh lg-4 2 > aug_search_lg-4-pt2.txt 2>&1 &
+# CUDA_VISIBLE_DEVICES=6 ./scripts/aug_pol_search.sh lg-4 1 > aug_search_lg-4-pt3.txt 2>&1 &
+# CUDA_VISIBLE_DEVICES=2 ./scripts/aug_pol_search.sh lg-7 2 > aug_search_lg-7-pt2.txt 2>&1 &
+# CUDA_VISIBLE_DEVICES=7 ./scripts/aug_pol_search.sh lg-7 1 > aug_search_lg-7-pt3.txt 2>&1 &
+# CUDA_VISIBLE_DEVICES=3 ./scripts/aug_pol_search.sh lg-8 2 > aug_search_lg-8-pt2.txt 2>&1 &
+# CUDA_VISIBLE_DEVICES=4 ./scripts/aug_pol_search.sh lg-8 1 > aug_search_lg-8-pt3.txt 2>&1 &
 
 # arguments: [$1 aug_policy] [$2 number of runs]
 wrn_40_2_eval() {
@@ -76,6 +83,13 @@ elif [ "$1" = "sm-7" ]; then
     echo "[bash] $@"
     wrn_40_2_eval 11-28-a $2
     wrn_40_2_eval 11-28-b $2
+elif [ "$1" = "sm-sanity" ]; then
+    echo "[bash] $@"
+    wrn_40_2_eval sanity $2
+elif [ "$1" = "sm-sanity2" ]; then
+    echo "[bash] $@"
+    wrn_40_2_eval sanity-2 $2
+
 
 elif [ "$1" = "lg-1" ]; then
     echo "[bash] $@"
