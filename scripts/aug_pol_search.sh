@@ -17,42 +17,45 @@ export OMP_NUM_THREADS=2
 # CUDA_VISIBLE_DEVICES=3 ./scripts/aug_pol_search.sh lg-8 2 > aug_search_lg-8-pt2.txt 2>&1 &
 # CUDA_VISIBLE_DEVICES=4 ./scripts/aug_pol_search.sh lg-8 1 > aug_search_lg-8-pt3.txt 2>&1 &
 
+# CUDA_VISIBLE_DEVICES=0 ./scripts/aug_pol_search.sh sm-sanity 3 > aug-pol-sanity.txt 2>&1 &
+# CUDA_VISIBLE_DEVICES=0 ./scripts/aug_pol_search.sh sm-sanity-2 3 > aug-pol-sanity-2.txt 2>&1 &
+
 # arguments: [$1 aug_policy] [$2 number of runs]
 wrn_40_2_eval() {
-    for i in $(seq 1 $2)
-    do
-        echo "[bash] Run wrn_40_2, iter $i, with policy $1"
-        python train.py \
-        --local_dir /data/dho/ray_results_2 \
-        --model_name wrn_40_2 \
-        --data_path /data/dho/datasets/cifar-10-batches-py --dataset cifar10 \
-        --train_size 4000 --val_size 0 --eval_test \
-        --checkpoint_freq 0 \
-        --gpu 1 --cpu 3 \
-        --use_hp_policy --hp_policy "/data/dho/pba/schedules/reduced_cifar_10/16_wrn.txt" \
-        --explore cifar10 \
-        --hp_policy_epochs 200 \
-        --aug_policy "$1" --name "aug_policy-$1"
-    done
+    # for i in $(seq 1 $2)
+    # do
+    echo "[bash] Run wrn_40_2, iter $i, with policy $1"
+    python train.py \
+    --local_dir /data/dho/ray_results_2 \
+    --model_name wrn_40_2 \
+    --data_path /data/dho/datasets/cifar-10-batches-py --dataset cifar10 \
+    --train_size 4000 --val_size 0 --eval_test \
+    --checkpoint_freq 0 \
+    --gpu 0.19 --cpu 2 \
+    --use_hp_policy --hp_policy "/data/dho/pba/schedules/reduced_cifar_10/16_wrn.txt" \
+    --explore cifar10 \
+    --hp_policy_epochs 200 \
+    --aug_policy "$1" --name "aug_policy-$1" --num_samples "$2"
+    # done
 }
 
 # arguments: [$1 aug_policy] [$2 number of runs]
 wrn_28_10_eval() {
-    for i in $(seq 1 $2)
-    do
-        echo "[bash] Run wrn_28_10, iter $i, with policy $1"
-        python train.py \
-        --local_dir /data/dho/ray_results_2 \
-        --model_name wrn_28_10 \
-        --data_path /data/dho/datasets/cifar-10-batches-py --dataset cifar10 \
-        --train_size 50000 --val_size 0 --eval_test \
-        --checkpoint_freq 0 \
-        --gpu 1 --cpu 3 \
-        --use_hp_policy --hp_policy "/data/dho/pba/schedules/reduced_cifar_10/16_wrn.txt" \
-        --explore cifar10 \
-        --hp_policy_epochs 200 \
-        --aug_policy "$1" --name "aug_policy-$1"
-    done
+    # for i in $(seq 1 $2)
+    # do
+    echo "[bash] Run wrn_28_10, iter $i, with policy $1"
+    python train.py \
+    --local_dir /data/dho/ray_results_2 \
+    --model_name wrn_28_10 \
+    --data_path /data/dho/datasets/cifar-10-batches-py --dataset cifar10 \
+    --train_size 50000 --val_size 0 --eval_test \
+    --checkpoint_freq 0 \
+    --gpu 1 --cpu 3 \
+    --use_hp_policy --hp_policy "/data/dho/pba/schedules/reduced_cifar_10/16_wrn.txt" \
+    --explore cifar10 \
+    --hp_policy_epochs 200 \
+    --aug_policy "$1" --name "aug_policy-$1" --num_samples "$2"
+    # done
 }
 
 if [ "$1" = "sm-1" ]; then
@@ -86,7 +89,7 @@ elif [ "$1" = "sm-7" ]; then
 elif [ "$1" = "sm-sanity" ]; then
     echo "[bash] $@"
     wrn_40_2_eval sanity $2
-elif [ "$1" = "sm-sanity2" ]; then
+elif [ "$1" = "sm-sanity-2" ]; then
     echo "[bash] $@"
     wrn_40_2_eval sanity-2 $2
 
