@@ -29,7 +29,7 @@ eval() {
     --model_name "$1" \
     --data_path "$data_path" --dataset "$dataset" \
     --train_size "$size" --val_size 0 --eval_test \
-    --checkpoint_freq 0 \
+    --checkpoint_freq 50 \
     --gpu "$4" --cpu 3 \
     --use_hp_policy --hp_policy "/data/dho/pba/schedules/reduced_cifar_10/16_wrn.txt" \
     --explore cifar10 \
@@ -38,11 +38,12 @@ eval() {
 }
 
 # CUDA_VISIBLE_DEVICES=0 source ./scripts/eval.sh wrn_28_10 1 cf100 1 > eval_logs/cifar100_wrn_28_10.txt 2>&1 &
-# CUDA_VISIBLE_DEVICES=0 source ./scripts/eval.sh shake-shake-96 2 cf100 0.5 > eval_logs/cifar100_wrn_28_10.txt 2>&1 &
+
+# CUDA_VISIBLE_DEVICES=0 source ./scripts/eval.sh shake_shake_96 1 cf100 0.5 > eval_logs/cifar100_wrn_28_10.txt 2>&1 &
 # CUDA_VISIBLE_DEVICES=0 source ./scripts/eval.sh pyramidnet 1 cf100 1 > eval_logs/cifar100_wrn_28_10.txt 2>&1 &
 
 # CUDA_VISIBLE_DEVICES=0 ./scripts/eval.sh wrn_28_10 5 r-cf10 1 > eval_logs/rcf_wrn_28_10.txt 2>&1 &
-# CUDA_VISIBLE_DEVICES=0 source ./scripts/eval.sh shake-shake-96 2 r-cf10 0.5 > eval_logs/rcf10_ss96.txt 2>&1 &
+# CUDA_VISIBLE_DEVICES=0 source ./scripts/eval.sh shake_shake_96 1 r-cf10 0.5 > eval_logs/rcf10_ss96.txt 2>&1 &
 
 # wrn shake-shake-32 shake-shake-96 shake-shake-112 pyramidnet
 eval "$@"
