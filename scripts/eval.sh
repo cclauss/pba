@@ -4,7 +4,7 @@ export PYTHONPATH="$(pwd)"
 
 # args: [model name] [number of times] [dataset name]
 eval() {
-    echo "$1 $2 $3"
+    echo "model: $1, trials: $2, dataset: $3"
     if [ "$3" = "r-cf10" ]; then
         size=4000
         name="reduced_cifar10_$1"
@@ -37,6 +37,12 @@ eval() {
     --aug_policy cifar10 --name "$name" --num_samples "$2" > "eval_logs/$name.txt" 2>&1 &
 }
 
+# CUDA_VISIBLE_DEVICES=0 source ./scripts/eval-wrn.sh wrn 1 cf100
+# CUDA_VISIBLE_DEVICES=0 source ./scripts/eval-wrn.sh shake-shake-96 1 cf100
+# CUDA_VISIBLE_DEVICES=0 source ./scripts/eval-wrn.sh pyramidnet 1 cf100
+
 # CUDA_VISIBLE_DEVICES=0 source ./scripts/eval-wrn.sh wrn 1 r-cf10
+# CUDA_VISIBLE_DEVICES=0 source ./scripts/eval-wrn.sh shake-shake-96 1 r-cf10
+
 # wrn shake-shake-32 shake-shake-96 shake-shake-112 pyramidnet
 eval $1 $2 $3

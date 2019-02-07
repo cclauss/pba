@@ -126,8 +126,14 @@ def create_hparams(state, FLAGS):
         epochs = 200
         hparams.add_hparam('wrn_size', 160)
         hparams.add_hparam('wrn_depth', 28)
-        hparams.add_hparam('lr', 0.1)
-        hparams.add_hparam('weight_decay_rate', 5e-4)
+        if FLAGS.dataset == 'cifar100' or (FLAGS.dataset == 'cifar10' and FLAGS.train_size == 50000):
+            hparams.add_hparam('lr', 0.1)
+            hparams.add_hparam('weight_decay_rate', 5e-4)
+        elif FLAGS.dataset == 'cifar10' and FLAGS.train_size == 4000:
+            hparams.add_hparam('lr', 0.05)
+            hparams.add_hparam('weight_decay_rate', 0.005)
+        else:
+            raise ValueError()
     elif FLAGS.model_name == 'resnet':
         hparams.add_hparam('model_name', 'resnet')
         epochs = 200
@@ -145,8 +151,17 @@ def create_hparams(state, FLAGS):
         hparams.add_hparam('model_name', 'shake_shake')
         epochs = 1800
         hparams.add_hparam('shake_shake_widen_factor', 6)
-        hparams.add_hparam('lr', 0.01)
-        hparams.add_hparam('weight_decay_rate', 0.001)
+        if FLAGS.dataset == 'cifar100':
+            hparams.add_hparam('lr', 0.01)
+            hparams.add_hparam('weight_decay_rate', 0.0025)
+        elif FLAGS.dataset == 'cifar10' and FLAGS.train_size == 50000:
+            hparams.add_hparam('lr', 0.01)
+            hparams.add_hparam('weight_decay_rate', 0.001)
+        elif FLAGS.dataset == 'cifar10' and FLAGS.train_size == 4000:
+            hparams.add_hparam('lr', 0.025)
+            hparams.add_hparam('weight_decay_rate', 0.0025)
+        else:
+            raise ValueError()
     elif FLAGS.model_name == 'shake_shake_112':
         hparams.add_hparam('model_name', 'shake_shake')
         epochs = 1800
@@ -156,15 +171,21 @@ def create_hparams(state, FLAGS):
     elif FLAGS.model_name == 'pyramid_net':
         hparams.add_hparam('model_name', 'pyramid_net')
         epochs = 1800
-        hparams.add_hparam('lr', 0.05)
-        hparams.add_hparam('weight_decay_rate', 5e-5)
-        hparams.batch_size = 64
+        if FLAGS.dataset == 'cifar100':
+            hparams.add_hparam('lr', 0.025)
+            hparams.add_hparam('weight_decay_rate', 5e-4)
+        elif FLAGS.dataset == 'cifar10':
+            hparams.add_hparam('lr', 0.05)
+            hparams.add_hparam('weight_decay_rate', 5e-5)
+        else:
+            assert False
+        hparams.set_hparam("batch_size", 64)
     else:
         raise ValueError('Not Valid Model Name: %s' % FLAGS.model_name)
     if FLAGS.lr > 0:
-        hparams.lr = FLAGS.lr
+        hparams.set_hparam("lr", FLAGS.lr)
     if FLAGS.wd > 0:
-        hparams.weight_decay_rate = FLAGS.wd
+        hparams.set_hparam("weight_decay_rate", FLAGS.wd)
     if FLAGS.epochs > 0:
         tf.logging.info("overwriting with custom epochs")
         epochs = FLAGS.epochs
