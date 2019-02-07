@@ -45,4 +45,4 @@ eval() {
 # CUDA_VISIBLE_DEVICES=0 source ./scripts/eval.sh shake-shake-96 2 r-cf10 0.5 > eval_logs/rcf10_ss96.txt 2>&1 &
 
 # wrn shake-shake-32 shake-shake-96 shake-shake-112 pyramidnet
-eval "$1" "$2" "$3" "$4"
+eval "$@"
