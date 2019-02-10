@@ -228,7 +228,7 @@ def pil_wrap(img, dataset):
         np.uint8((img * STDS[dataset] + MEANS[dataset]) * 255.0)).convert('RGBA')
 
 
-def pil_unwrap(pil_img):
+def pil_unwrap(pil_img, dataset):
     """Converts the PIL img to a numpy array."""
     pic_array = (np.array(pil_img.getdata()).reshape((32, 32, 4)) / 255.0)
     i1, i2 = np.where(pic_array[:, :, 3] == 0)
