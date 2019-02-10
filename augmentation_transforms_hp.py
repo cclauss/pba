@@ -29,12 +29,16 @@ from PIL import ImageOps, ImageEnhance, ImageFilter, Image
 
 IMAGE_SIZE = 32
 # What is the dataset mean and std of the images on the training set
-MEANS = [0.49139968, 0.48215841, 0.44653091]
-STDS = [0.24703223, 0.24348513, 0.26158784]
+MEANS = {'cifar10_50000':[0.49139968, 0.48215841, 0.44653091],
+         'cifar10_4000':[0.49056774, 0.48116026, 0.44726052],
+         'cifar100_50000':[0.50707516, 0.48654887, 0.44091784]}
+STDS = {'cifar10_50000':[0.24703223, 0.24348513, 0.26158784],
+        'cifar10_4000':[0.24710728, 0.24451308, 0.26235099],
+        'cifar100_50000':[0.26733429, 0.25643846, 0.27615047]}
 PARAMETER_MAX = 10  # What is the max 'level' a transform could be predicted
 
 
-def apply_policy(policy, img, aug_policy):
+def apply_policy(policy, img, aug_policy, dset):
     """Apply the `policy` to the numpy `img`.
 
     Args:
@@ -82,7 +86,7 @@ def apply_policy(policy, img, aug_policy):
     else:
         raise ValueError("unknown aug policy")
     if count != 0:
-        pil_img = pil_wrap(img)
+        pil_img = pil_wrap(img, dset)
         policy = copy.copy(policy)
         random.shuffle(policy)
         for xform in policy:
@@ -97,7 +101,7 @@ def apply_policy(policy, img, aug_policy):
             assert count >= 0
             if count == 0:
                 break
-        return pil_unwrap(pil_img)
+        return pil_unwrap(pil_img, dset)
     else:
         return img
 
@@ -218,17 +222,17 @@ def int_parameter(level, maxval):
     return int(level * maxval / PARAMETER_MAX)
 
 
-def pil_wrap(img):
+def pil_wrap(img, dataset):
     """Convert the `img` numpy tensor to a PIL Image."""
     return Image.fromarray(
-        np.uint8((img * STDS + MEANS) * 255.0)).convert('RGBA')
+        np.uint8((img * STDS[dataset] + MEANS[dataset]) * 255.0)).convert('RGBA')
 
 
 def pil_unwrap(pil_img):
     """Converts the PIL img to a numpy array."""
     pic_array = (np.array(pil_img.getdata()).reshape((32, 32, 4)) / 255.0)
     i1, i2 = np.where(pic_array[:, :, 3] == 0)
-    pic_array = (pic_array[:, :, :3] - MEANS) / STDS
+    pic_array = (pic_array[:, :, :3] - MEANS[dataset]) / STDS[dataset]
     pic_array[i1, i2] = [0, 0, 0]
     return pic_array
 

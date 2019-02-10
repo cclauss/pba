@@ -166,8 +166,9 @@ class DataSet(object):
         all_data = all_data.reshape(-1, 3, 32, 32)
         all_data = all_data.transpose(0, 2, 3, 1).copy()
         all_data = all_data / 255.0
-        mean = augmentation_transforms.MEANS
-        std = augmentation_transforms.STDS
+
+        mean = augmentation_transforms.MEANS[hparams.dataset+"_"+str(hparams.train_size)]
+        std = augmentation_transforms.STDS[hparams.dataset+"_"+str(hparams.train_size)]
         tf.logging.info('mean:{}    std: {}'.format(mean, std))
 
         all_data = (all_data - mean) / std
@@ -196,6 +197,18 @@ class DataSet(object):
         self.val_images = all_data[train_size:train_size + val_size]
         self.val_labels = all_labels[train_size:train_size + val_size]
         self.num_train = self.train_images.shape[0]
+
+        # mean = self.train_images.mean(axis=(0,1,2))
+        # std = self.train_images.std(axis=(0,1,2))
+        # tf.logging.info('[train] mean:{}    std: {}'.format(mean, std))
+        # if hparams.validation_size > 0:
+        #     mean = self.val_images.mean(axis=(0,1,2))
+        #     std = self.val_images.std(axis=(0,1,2))
+        #     tf.logging.info('[eval] mean:{}    std: {}'.format(mean, std))
+        # mean = self.test_images.mean(axis=(0,1,2))
+        # std = self.test_images.std(axis=(0,1,2))
+        # tf.logging.info('[test] mean:{}    std: {}'.format(mean, std))
+        # exit()
 
         if hparams.eval_test:
             tf.logging.info("train dataset size: {}, test: {}, val: {}".format(
@@ -228,16 +241,17 @@ class DataSet(object):
                     final_img = augmentation_transforms.apply_policy(
                         epoch_policy, data)
                 else:
+                    dset = self.hparams.dataset + "_" + str(self.hparams.train_size)
                     if type(self.policy[0]) is list:
                         if self.hparams.flatten:
                             final_img = augmentation_transforms.apply_policy(
-                                self.policy[random.randint(0, len(self.policy) - 1)], data, self.hparams.aug_policy)
+                                self.policy[random.randint(0, len(self.policy) - 1)], data, self.hparams.aug_policy, dset)
                         else:
                             final_img = augmentation_transforms.apply_policy(
-                                self.policy[iteration], data, self.hparams.aug_policy)
+                                self.policy[iteration], data, self.hparams.aug_policy, dset)
                     elif type(self.policy) is list:
                         final_img = augmentation_transforms.apply_policy(
-                            self.policy, data, self.hparams.aug_policy)
+                            self.policy, data, self.hparams.aug_policy, dset)
                     else:
                         raise ValueError("unknown policy")
             else:
