@@ -102,18 +102,27 @@ class DataSet(object):
             tf.logging.info("using ENAS Policy or no augmentaton policy")
             self.good_policies = found_policies.good_policies()
 
-        # Determine how many databatched to load
-        num_data_batches_to_load = 5
-        total_batches_to_load = num_data_batches_to_load
-        train_batches_to_load = total_batches_to_load
-        assert hparams.train_size + hparams.validation_size <= 50000
-        if hparams.eval_test:
-            total_batches_to_load += 1
-        # Determine how many images we have loaded
-        total_dataset_size = 10000 * num_data_batches_to_load
-        train_dataset_size = total_dataset_size
-        if hparams.eval_test:
-            total_dataset_size += 10000
+
+        if hparams.dataset == 'cifar10' or hparams.dataset == 'cifar100':
+            num_data_batches_to_load = 5
+            total_batches_to_load = num_data_batches_to_load
+            train_batches_to_load = total_batches_to_load
+            assert hparams.train_size + hparams.validation_size <= 50000
+            if hparams.eval_test:
+                total_batches_to_load += 1
+            # Determine how many images we have loaded
+            total_dataset_size = 10000 * num_data_batches_to_load
+            train_dataset_size = total_dataset_size
+            if hparams.eval_test:
+                total_dataset_size += 10000
+        elif hparams.dataset == 'svhn':
+            assert hparams.train_size == 1000
+            assert hparams.train_size + hparams.validation_size <= 73257
+        elif hparams.dataset == 'svhn_extra':
+            assert hparams.train_size == 73257 + 531131
+            assert hparams.validation_size == 0
+        else:
+            raise ValueError("unimplemented")
 
         # create correct data shape
         if hparams.dataset == 'cifar10':
@@ -125,7 +134,7 @@ class DataSet(object):
             if hparams.eval_test:
                 test_data = np.empty((1, 10000, 3072), dtype=np.uint8)
         else:
-            raise ValueError()
+            assert'svhn' in hparams.dataset
 
         # load data from files
         if hparams.dataset == 'cifar10':
@@ -143,32 +152,69 @@ class DataSet(object):
             if hparams.eval_test:
                 datafiles.append('test')
             num_classes = 100
+        elif hparams.dataset == 'svhn':
+            import torchvision
+            train_loader = torchvision.datasets.SVHN(
+                root="/data/dho/datasets", split="train", download=True)
+            test_loader = torchvision.datasets.SVHN(
+                root="/data/dho/datasets", split="test", download=True)
+            num_classes = 10
+        elif hparams.dataset == 'svhn_extra':
+            import torchvision
+            train_loader = torchvision.datasets.SVHN(
+                root="/data/dho/datasets", split="train", download=True)
+            test_loader = torchvision.datasets.SVHN(
+                root="/data/dho/datasets", split="test", download=True)
+            extra_loader = torchvision.datasets.SVHN(
+                root="/data/dho/datasets", split="extra", download=True)
+            num_classes = 10
         else:
             raise NotImplementedError(
                 'Unimplemented dataset: ', hparams.dataset)
 
-        for file_num, f in enumerate(datafiles):
-            d = unpickle(os.path.join(hparams.data_path, f))
-            if f == 'test':
-                test_data[0] = copy.deepcopy(d['data'])
-                all_data = np.concatenate([all_data, test_data], axis=1)
-            else:
-                all_data[file_num] = copy.deepcopy(d['data'])
-            if hparams.dataset == 'cifar10':
-                labels = np.array(d['labels'])
-            else:
-                labels = np.array(d['fine_labels'])
-            nsamples = len(labels)
-            for idx in range(nsamples):
-                all_labels.append(labels[idx])
+        if hparams.dataset == 'svhn':
+            # def to_array(pic):
+            #     return np.array(pic.getdata()).reshape(
+            #         pic.size[0], pic.size[1], 3).transpose(2, 0, 1)
+            test_dataset_size = 26032
+            all_data = np.concatenate([train_loader.data, test_loader.data], axis=0)
+            all_labels = np.concatenate([train_loader.labels, test_loader.labels], axis=0)
+        elif hparams.dataset == 'svhn_extra':
+            test_dataset_size = 26032
+            all_data = np.concatenate([train_loader.data, extra_loader.data, test_loader.data], axis=0)
+            all_labels = np.concatenate([train_loader.labels, extra_loader.labels, test_loader.labels], axis=0)
+        elif 'cifar' in hparams.dataset:
+            for file_num, f in enumerate(datafiles):
+                d = unpickle(os.path.join(hparams.data_path, f))
+                if f == 'test':
+                    test_data[0] = copy.deepcopy(d['data'])
+                    all_data = np.concatenate([all_data, test_data], axis=1)
+                else:
+                    all_data[file_num] = copy.deepcopy(d['data'])
+                if hparams.dataset == 'cifar10':
+                    labels = np.array(d['labels'])
+                else:
+                    labels = np.array(d['fine_labels'])
+                nsamples = len(labels)
+                for idx in range(nsamples):
+                    all_labels.append(labels[idx])
+        else:
+            raise ValueError()
 
-        all_data = all_data.reshape(total_dataset_size, 3072)
-        all_data = all_data.reshape(-1, 3, 32, 32)
+        if 'cifar' in hparams.dataset:
+            all_data = all_data.reshape(total_dataset_size, 3072)
+            all_data = all_data.reshape(-1, 3, 32, 32)
+        # print(hparams.dataset, all_data.shape, type(all_data), all_data.dtype)
+
         all_data = all_data.transpose(0, 2, 3, 1).copy()
         all_data = all_data / 255.0
-
+        # if hparams.use_hp_policy:
         mean = augmentation_transforms.MEANS[hparams.dataset+"_"+str(hparams.train_size)]
         std = augmentation_transforms.STDS[hparams.dataset+"_"+str(hparams.train_size)]
+        # else:
+        #     mean = augmentation_transforms.MEANS
+        #     std = augmentation_transforms.STDS
+
         tf.logging.info('mean:{}    std: {}'.format(mean, std))
 
         all_data = (all_data - mean) / std
@@ -178,11 +224,20 @@ class DataSet(object):
             'In {} loader, number of images: {}'.format(hparams.dataset, len(all_data)))
 
         # Break off test data
-        if hparams.eval_test:
-            self.test_images = all_data[train_dataset_size:]
-            self.test_labels = all_labels[train_dataset_size:]
-            all_data = all_data[:train_dataset_size]
-            all_labels = all_labels[:train_dataset_size]
+        if 'cifar' in hparams.dataset:
+            if hparams.eval_test:
+                self.test_images = all_data[train_dataset_size:]
+                self.test_labels = all_labels[train_dataset_size:]
+                all_data = all_data[:train_dataset_size]
+                all_labels = all_labels[:train_dataset_size]
+        elif 'svhn' in hparams.dataset:
+            assert hparams.eval_test
+            self.test_images = all_data[:test_dataset_size]
+            self.test_labels = all_labels[:test_dataset_size]
+            # print(self.test_images.shape, self.test_labels.shape)
+            # Shuffle the rest of the data
+            all_data = all_data[:test_dataset_size]
+            all_labels = all_labels[:test_dataset_size]
         np.random.seed(0)
         perm = np.arange(len(all_data))
         np.random.shuffle(perm)
@@ -191,7 +246,10 @@ class DataSet(object):
 
         # Break into train and val
         train_size, val_size = hparams.train_size, hparams.validation_size
-        assert 50000 >= train_size + val_size
+        if 'cifar' in hparams.dataset:
+            assert 50000 >= train_size + val_size
+        elif 'svhn' in hparams.dataset:
+            assert train_size + val_size <= 73257
         self.train_images = all_data[:train_size]
         self.train_labels = all_labels[:train_size]
         self.val_images = all_data[train_size:train_size + val_size]
@@ -236,13 +294,16 @@ class DataSet(object):
         for data in images:
             if not self.hparams.no_aug:
                 if not self.hparams.use_hp_policy:
+                    # apply autoaugment policy
                     epoch_policy = self.good_policies[np.random.choice(
                         len(self.good_policies))]
                     final_img = augmentation_transforms.apply_policy(
                         epoch_policy, data)
                 else:
+                    # apply PBA policy
                     dset = self.hparams.dataset + "_" + str(self.hparams.train_size)
                     if type(self.policy[0]) is list:
+                        # single policy
                         if self.hparams.flatten:
                             final_img = augmentation_transforms.apply_policy(
                                 self.policy[random.randint(0, len(self.policy) - 1)], data, self.hparams.aug_policy, dset)
@@ -250,14 +311,19 @@ class DataSet(object):
                             final_img = augmentation_transforms.apply_policy(
                                 self.policy[iteration], data, self.hparams.aug_policy, dset)
                     elif type(self.policy) is list:
+                        # policy schedule
                         final_img = augmentation_transforms.apply_policy(
                             self.policy, data, self.hparams.aug_policy, dset)
                     else:
                         raise ValueError("unknown policy")
             else:
+                # no extra
                 final_img = data
-            final_img = augmentation_transforms.random_flip(
-                augmentation_transforms.zero_pad_and_crop(final_img, 4))
+            if self.hparams.dataset == 'cifar10' or self.hparams.dataset == 'cifar100':
+                final_img = augmentation_transforms.random_flip(
+                    augmentation_transforms.zero_pad_and_crop(final_img, 4))
+            else:
+                assert "svhn" in self.hparams.dataset
             # Apply cutout
             if not self.hparams.no_cutout:
                 final_img = augmentation_transforms.cutout_numpy(final_img)

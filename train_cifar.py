@@ -123,13 +123,22 @@ class CifarModel(object):
 
     def _setup_images_and_labels(self, dataset):
         """Sets up image and label placeholders for the cifar model."""
-        if dataset == 'cifar10':
+        if dataset == 'cifar10' or dataset == 'svhn' or dataset == 'svhn-full':
             self.num_classes = 10
-        else:
+        elif dataset == 'cifar100':
             self.num_classes = 100
-        self.images = tf.placeholder(tf.float32, [None, 32, 32, 3])
-        self.labels = tf.placeholder(tf.float32,
-                                     [None, self.num_classes])
+        else:
+            raise ValueError()
+        if dataset == 'cifar10' or dataset == 'cifar100' or self.mode == 'train':
+            self.images = tf.placeholder(tf.float32, [self.batch_size, 32, 32, 3])
+            self.labels = tf.placeholder(tf.float32,
+                                        [self.batch_size, self.num_classes])
+        else:
+            # svhn eval is weird
+            self.images = tf.placeholder(tf.float32, [None, 32, 32, 3])
+            self.labels = tf.placeholder(tf.float32,
+                                        [None, self.num_classes])
+
 
     def assign_epoch(self, session, epoch_value):
         session.run(self._epoch_update, feed_dict={

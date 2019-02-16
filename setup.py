@@ -13,7 +13,7 @@ def create_parser(state, verbose=True):
     parser.add_argument('--data_path', default='/tmp/datasets/',
                         help='Directory where dataset is located.')
     parser.add_argument('--dataset', default='cifar10',
-                        choices=('cifar10', 'cifar100'))
+                        choices=('cifar10', 'cifar100', 'svhn', 'svhn-full'))
     parser.add_argument('--local_dir', type=str,
                         default="/tmp/ray_results/")
     parser.add_argument('--restore', type=str, default=None)
@@ -119,8 +119,14 @@ def create_hparams(state, FLAGS):
         epochs = 200
         hparams.add_hparam('wrn_size', 32)
         hparams.add_hparam('wrn_depth', 40)
-        hparams.add_hparam('lr', 0.1)
-        hparams.add_hparam('weight_decay_rate', 5e-4)
+        if FLAGS.dataset == 'cifar10':
+            hparams.add_hparam('lr', 0.1)
+            hparams.add_hparam('weight_decay_rate', 5e-4)
+        elif FLAGS.dataset == 'svhn' or FLAGS.dataset == 'svhn-full':
+            hparams.add_hparam('lr', 0.005)
+            hparams.add_hparam('weight_decay_rate', 0.005)
+        else:
+            raise ValueError()
     elif FLAGS.model_name == 'wrn_28_10':
         hparams.add_hparam('model_name', 'wrn')
         epochs = 200
@@ -132,6 +138,9 @@ def create_hparams(state, FLAGS):
         elif FLAGS.dataset == 'cifar10' and FLAGS.train_size == 4000:
             hparams.add_hparam('lr', 0.05)
             hparams.add_hparam('weight_decay_rate', 0.005)
+        elif FLAGS.dataset == 'svhn' or FLAGS.dataset == 'svhn-full':
+            hparams.add_hparam('lr', 0.005)
+            hparams.add_hparam('weight_decay_rate', 0.001)
         else:
             raise ValueError()
     elif FLAGS.model_name == 'resnet':
@@ -160,6 +169,9 @@ def create_hparams(state, FLAGS):
         elif FLAGS.dataset == 'cifar10' and FLAGS.train_size == 4000:
             hparams.add_hparam('lr', 0.025)
             hparams.add_hparam('weight_decay_rate', 0.0025)
+        elif FLAGS.dataset == 'svhn' or FLAGS.dataset == 'svhn-full':
+            hparams.add_hparam('lr', 0.1) # or 0.01
+            hparams.add_hparam('weight_decay_rate', 0.00015)
         else:
             raise ValueError()
     elif FLAGS.model_name == 'shake_shake_112':
@@ -178,7 +190,7 @@ def create_hparams(state, FLAGS):
             hparams.add_hparam('lr', 0.05)
             hparams.add_hparam('weight_decay_rate', 5e-5)
         else:
-            assert False
+            raise ValueError()
         hparams.set_hparam("batch_size", 64)
     else:
         raise ValueError('Not Valid Model Name: %s' % FLAGS.model_name)

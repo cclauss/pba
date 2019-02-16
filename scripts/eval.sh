@@ -37,13 +37,16 @@ eval() {
     --aug_policy cifar10 --name "$name" --num_samples "$2"
 }
 
-# CUDA_VISIBLE_DEVICES=0 source ./scripts/eval.sh wrn_28_10 1 cf100 1 > eval_logs/cifar100_wrn_28_10.txt 2>&1 &
+# CUDA_VISIBLE_DEVICES=0 source ./scripts/eval.sh wrn_28_10 5 cf100 1 > eval_logs/cifar100_wrn_28_10.txt 2>&1 &
 
-# CUDA_VISIBLE_DEVICES=0 source ./scripts/eval.sh shake_shake_96 1 cf100 0.5 > eval_logs/cifar100_wrn_28_10.txt 2>&1 &
-# CUDA_VISIBLE_DEVICES=0 source ./scripts/eval.sh pyramidnet 1 cf100 1 > eval_logs/cifar100_wrn_28_10.txt 2>&1 &
+# CUDA_VISIBLE_DEVICES=0 ./scripts/eval.sh shake_shake_96 1 cf100 0.5 |& tee eval_logs/cifar100_ss96_6.txt
+# CUDA_VISIBLE_DEVICES=1 source ./scripts/eval.sh shake_shake_96 1 cf100 1 > eval_logs/cifar100_ss96.txt 2>&1 &
 
-# CUDA_VISIBLE_DEVICES=0 ./scripts/eval.sh wrn_28_10 5 r-cf10 1 > eval_logs/rcf_wrn_28_10.txt 2>&1 &
-# CUDA_VISIBLE_DEVICES=0 source ./scripts/eval.sh shake_shake_96 1 r-cf10 0.5 > eval_logs/rcf10_ss96.txt 2>&1 &
+# CUDA_VISIBLE_DEVICES=0 ./scripts/eval.sh pyramid_net 1 cf100 1 |& tee eval_logs/cifar100_pyra_1.txt
+# ./scripts/eval.sh pyramid_net 4 cf100 1 |& tee eval_logs/cifar100_pyra_1.txt
+
+# CUDA_VISIBLE_DEVICES=0 ./scripts/eval.sh wrn_28_10 5 r-cf10 1 > eval_logs/rcf_wrn_28_10_mean_fix.txt 2>&1 &
+# CUDA_VISIBLE_DEVICES=0 source ./scripts/eval.sh shake_shake_96 5 r-cf10 0.5 > eval_logs/rcf10_ss96_mean_fix.txt 2>&1 &
 
 # wrn shake-shake-32 shake-shake-96 shake-shake-112 pyramidnet
 eval "$@"
