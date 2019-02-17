@@ -2,9 +2,20 @@
 # export PYTHONPATH="$(pwd)"
 # export OMP_NUM_THREADS=2
 
+train_clean() {
+    python train.py \
+    --local_dir /data/dho/ray_results_2/svhn \
+    --model_name wrn_40_2 --dataset svhn-full \
+    --train_size 604388 --val_size 0 --eval_test \
+    --checkpoint_freq 10 --epochs 160 \
+    --name svhn_full_clean --gpu 1 --cpu 6
+    # --lr 0.005 --wd 0.001 --bs 128
+}
+
 train_aa() {
     python train.py \
-    --model_name wrn --dataset svhn_extra \
+    --local_dir /data/dho/ray_results_2/svhn \
+    --model_name wrn --dataset svhn-full \
     --train_size 604388 --val_size 0 --eval_test \
     --checkpoint_freq 10 --epochs 160 \
     --name svhn_full_autoaug_wrn --gpu 1 --cpu 2 \
@@ -13,7 +24,8 @@ train_aa() {
 
 train() {
     python train.py \
-    --model_name wrn --dataset svhn_extra \
+    --local_dir /data/dho/ray_results_2/svhn \
+    --model_name wrn_40_2 --dataset svhn-full \
     --train_size 604388 --val_size 0 --eval_test \
     --checkpoint_freq 10 --epochs 160 \
     --name svhn_full_autoaug_wrn_cifarpol --gpu 1 --cpu 2 \
@@ -58,7 +70,7 @@ train_reduced_aa() {
 
     python train.py \
     --local_dir /data/dho/ray_results_2/svhn \
-    --model_name wrn_28_10 --dataset svhn \
+    --model_name wrn_40_2 --dataset svhn \
     --train_size 1000 --val_size 0 --eval_test \
     --checkpoint_freq 0 --epochs 160 \
     --name sanity_aa --gpu 1 --cpu 2 --no_cutout \
@@ -98,6 +110,9 @@ if [ "$1" = "train-reduced" ]; then
 elif [ "$1" = "train-full" ]; then
     echo "[bash] train-full $@"
     exit 1
+elif [ "$1" = "train-full-clean" ]; then
+    echo "[bash] train-full $@"
+    train_clean
 elif [ "$1" = "train-reduced-aa" ]; then
     echo "[bash] train-reduced-aa $@"
     train_reduced_aa

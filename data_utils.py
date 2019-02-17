@@ -127,7 +127,7 @@ class DataSet(object):
         elif hparams.dataset == 'svhn':
             assert hparams.train_size == 1000
             assert hparams.train_size + hparams.validation_size <= 73257
-        elif hparams.dataset == 'svhn_extra':
+        elif hparams.dataset == 'svhn-full':
             assert hparams.train_size == 73257 + 531131
             assert hparams.validation_size == 0
         else:
@@ -168,7 +168,7 @@ class DataSet(object):
             test_loader = torchvision.datasets.SVHN(
                 root="/data/dho/datasets", split="test", download=True)
             num_classes = 10
-        elif hparams.dataset == 'svhn_extra':
+        elif hparams.dataset == 'svhn-full':
             import torchvision
             train_loader = torchvision.datasets.SVHN(
                 root="/data/dho/datasets", split="train", download=True)
@@ -182,16 +182,14 @@ class DataSet(object):
                 'Unimplemented dataset: ', hparams.dataset)
 
         if hparams.dataset == 'svhn':
-            # def to_array(pic):
-            #     return np.array(pic.getdata()).reshape(
-            #         pic.size[0], pic.size[1], 3).transpose(2, 0, 1)
             test_dataset_size = 26032
             all_data = np.concatenate([train_loader.data, test_loader.data], axis=0)
             all_labels = np.concatenate([train_loader.labels, test_loader.labels], axis=0)
-        elif hparams.dataset == 'svhn_extra':
+        elif hparams.dataset == 'svhn-full':
             test_dataset_size = 26032
             all_data = np.concatenate([train_loader.data, extra_loader.data, test_loader.data], axis=0)
             all_labels = np.concatenate([train_loader.labels, extra_loader.labels, test_loader.labels], axis=0)
+            print(train_loader.data.shape, test_loader.data.shape, extra_loader.data.shape)
         elif 'cifar' in hparams.dataset:
             for file_num, f in enumerate(datafiles):
                 d = unpickle(os.path.join(hparams.data_path, f))
@@ -214,19 +212,13 @@ class DataSet(object):
             all_data = all_data.reshape(total_dataset_size, 3072)
             all_data = all_data.reshape(-1, 3, 32, 32)
         # print(hparams.dataset, all_data.shape, type(all_data), all_data.dtype)
-
         all_data = all_data.transpose(0, 2, 3, 1).copy()
         all_data = all_data / 255.0
-        # if hparams.use_hp_policy:
         mean = augmentation_transforms.MEANS[hparams.dataset+"_"+str(hparams.train_size)]
         std = augmentation_transforms.STDS[hparams.dataset+"_"+str(hparams.train_size)]
-        # else:
-        #     mean = augmentation_transforms.MEANS
-        #     std = augmentation_transforms.STDS
-
         tf.logging.info('mean:{}    std: {}'.format(mean, std))
 
-        all_data = (all_data - mean) / std
+        # all_data = (all_data - mean) / std
         all_labels = np.eye(num_classes)[np.array(all_labels, dtype=np.int32)]
         assert len(all_data) == len(all_labels)
         tf.logging.info(
@@ -239,31 +231,37 @@ class DataSet(object):
                 self.test_labels = all_labels[train_dataset_size:]
                 all_data = all_data[:train_dataset_size]
                 all_labels = all_labels[:train_dataset_size]
+            # Shuffle data for CIFAR only
+            np.random.seed(0)
+            perm = np.arange(len(all_data))
+            np.random.shuffle(perm)
+            all_data = all_data[perm]
+            all_labels = all_labels[perm]
+            # Break into train and val
+            train_size, val_size = hparams.train_size, hparams.validation_size
+            assert 50000 >= train_size + val_size
+            self.train_images = all_data[:train_size]
+            self.train_labels = all_labels[:train_size]
+            self.val_images = all_data[train_size:train_size + val_size]
+            self.val_labels = all_labels[train_size:train_size + val_size]
+            self.num_train = self.train_images.shape[0]
+        
         elif 'svhn' in hparams.dataset:
             assert hparams.eval_test
-            self.test_images = all_data[:test_dataset_size]
-            self.test_labels = all_labels[:test_dataset_size]
-            # print(self.test_images.shape, self.test_labels.shape)
-            # Shuffle the rest of the data
-            all_data = all_data[:test_dataset_size]
+            self.test_images = all_data[-test_dataset_size:]
+            self.test_labels = all_labels[-test_dataset_size:]
+            all_data = all_data[:-test_dataset_size]
             all_labels = all_labels[:test_dataset_size]
-        np.random.seed(0)
-        perm = np.arange(len(all_data))
-        np.random.shuffle(perm)
-        all_data = all_data[perm]
-        all_labels = all_labels[perm]
-
-        # Break into train and val
-        train_size, val_size = hparams.train_size, hparams.validation_size
-        if 'cifar' in hparams.dataset:
-            assert 50000 >= train_size + val_size
-        elif 'svhn' in hparams.dataset:
-            assert train_size + val_size <= 73257
-        self.train_images = all_data[:train_size]
-        self.train_labels = all_labels[:train_size]
-        self.val_images = all_data[train_size:train_size + val_size]
-        self.val_labels = all_labels[train_size:train_size + val_size]
-        self.num_train = self.train_images.shape[0]
+            train_size, val_size = hparams.train_size, hparams.validation_size
+            if hparams.dataset == 'svhn-full':
+                assert train_size + val_size <= 604388
+            else:
+                assert train_size + val_size <= 73257
+            self.train_images = all_data[:train_size]
+            self.train_labels = all_labels[:train_size]
+            self.val_images = all_data[-val_size:]
+            self.val_labels = all_labels[-val_size:]
+            self.num_train = self.train_images.shape[0]
 
         # mean = self.train_images.mean(axis=(0,1,2))
         # std = self.train_images.std(axis=(0,1,2))
