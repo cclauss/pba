@@ -19,6 +19,20 @@ wrn_40_2_grid_search() {
     --aug_policy "$1" --name "aug_policy-$1"
 }
 
+svhn_wrn_40_2_grid_search() {
+    echo "[bash] SVHN Grid Search w/ wrn_40_2, policy ${1}"
+    python grid_search.py \
+    --local_dir /data/dho/ray_results_2/svhn_grid_search \
+    --model_name wrn_40_2 --dataset svhn \
+    --train_size 1000 --val_size 0 --eval_test \
+    --checkpoint_freq 0 \
+    --gpu 0.19 --cpu 1 \
+    --use_hp_policy --hp_policy "/data/dho/pba/schedules/reduced_cifar_10/16_wrn.txt" \
+    --explore cifar10 \
+    --hp_policy_epochs 200 \
+    --aug_policy cifar10 --name "svhn_grid_search"
+}
+
 if [ "$1" = "aug_11-23" ]; then
     echo "[bash] $@"
     wrn_40_2_grid_search 11-23

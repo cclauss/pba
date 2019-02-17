@@ -157,22 +157,22 @@ def int_parameter(level, maxval):
     return int(level * maxval / PARAMETER_MAX)
 
 
-def pil_wrap(img):
+def pil_wrap(img, dataset):
     """Convert the `img` numpy tensor to a PIL Image."""
     return Image.fromarray(
-        np.uint8((img * STDS + MEANS) * 255.0)).convert('RGBA')
+        np.uint8((img * STDS[dataset] + MEANS[dataset]) * 255.0)).convert('RGBA')
 
 
-def pil_unwrap(pil_img):
+def pil_unwrap(pil_img, dataset):
     """Converts the PIL img to a numpy array."""
     pic_array = (np.array(pil_img.getdata()).reshape((32, 32, 4)) / 255.0)
     i1, i2 = np.where(pic_array[:, :, 3] == 0)
-    pic_array = (pic_array[:, :, :3] - MEANS) / STDS
+    pic_array = (pic_array[:, :, :3] - MEANS[dataset]) / STDS[dataset]
     pic_array[i1, i2] = [0, 0, 0]
     return pic_array
 
 
-def apply_policy(policy, img):
+def apply_policy(policy, img, dset):
     """Apply the `policy` to the numpy `img`.
 
     Args:
@@ -185,13 +185,13 @@ def apply_policy(policy, img):
     Returns:
       The result of applying `policy` to `img`.
     """
-    pil_img = pil_wrap(img)
+    pil_img = pil_wrap(img, dset)
     for xform in policy:
         assert len(xform) == 3
         name, probability, level = xform
         xform_fn = NAME_TO_TRANSFORM[name].pil_transformer(probability, level)
         pil_img = xform_fn(pil_img)
-    return pil_unwrap(pil_img)
+    return pil_unwrap(pil_img, dset)
 
 
 class TransformFunction(object):

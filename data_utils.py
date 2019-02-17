@@ -100,8 +100,11 @@ class DataSet(object):
         else:
             import augmentation_transforms
             tf.logging.info("using ENAS Policy or no augmentaton policy")
-            self.good_policies = found_policies.good_policies()
-
+            if 'svhn' in hparams.dataset:
+                self.good_policies = found_policies.good_policies_svhn()
+            else:
+                assert 'cifar' in hparams.dataset 
+                self.good_policies = found_policies.good_policies()
 
         if hparams.dataset == 'cifar10' or hparams.dataset == 'cifar100':
             num_data_batches_to_load = 5
@@ -290,6 +293,7 @@ class DataSet(object):
                               self.curr_train_index + self.hparams.batch_size])
         final_imgs = []
 
+        dset = self.hparams.dataset + "_" + str(self.hparams.train_size)
         images, labels = batched_data
         for data in images:
             if not self.hparams.no_aug:
@@ -298,10 +302,9 @@ class DataSet(object):
                     epoch_policy = self.good_policies[np.random.choice(
                         len(self.good_policies))]
                     final_img = augmentation_transforms.apply_policy(
-                        epoch_policy, data)
+                        epoch_policy, data, dset=dset)
                 else:
-                    # apply PBA policy
-                    dset = self.hparams.dataset + "_" + str(self.hparams.train_size)
+                    # apply PBA policy)
                     if type(self.policy[0]) is list:
                         # single policy
                         if self.hparams.flatten:
