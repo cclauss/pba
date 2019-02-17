@@ -8,8 +8,8 @@ train_clean() {
     --model_name wrn_40_2 --dataset svhn-full \
     --train_size 604388 --val_size 0 --eval_test \
     --checkpoint_freq 10 --epochs 160 \
-    --name svhn_full_clean --gpu 1 --cpu 6
-    # --lr 0.005 --wd 0.001 --bs 128
+    --name svhn_full_clean --gpu 1 --cpu 6 \
+    --lr 0.005 --wd 0.001 --bs 128
 }
 
 train_aa() {
@@ -38,12 +38,12 @@ train() {
 train_reduced_clean() {
     python train.py \
     --local_dir /data/dho/ray_results_2/svhn \
-    --model_name wrn_40_2 --dataset svhn \
+    --model_name wrn_28_10 --dataset svhn \
     --train_size 1000 --val_size 0 --eval_test \
     --checkpoint_freq 0 --epochs 160 \
     --name sanity --gpu 1 --cpu 2 --no_cutout --no_aug \
-    --lr 0.025 --bs 8
-    # --lr 0.1 --wd 0.0075 --bs 128
+    --lr 0.1 --wd 0.0075 --bs 128
+    # --lr 0.025 --bs 8
 }
 
 
