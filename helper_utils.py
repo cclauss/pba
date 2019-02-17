@@ -124,6 +124,7 @@ def cosine_lr(learning_rate, epoch, iteration, batches_per_epoch, total_epochs):
     t_cur = float(epoch * batches_per_epoch + iteration)
     return 0.5 * learning_rate * (1 + np.cos(np.pi * t_cur / t_total))
 
+
 def step_lr(learning_rate, epoch):
     """Step Learning rate.
 
@@ -144,6 +145,7 @@ def step_lr(learning_rate, epoch):
     else:
         return learning_rate * 0.01
 
+
 def get_lr(curr_epoch, hparams, iteration=None):
     """Returns the learning rate during training based on the current epoch."""
     assert iteration is not None
@@ -152,7 +154,7 @@ def get_lr(curr_epoch, hparams, iteration=None):
         lr = step_lr(hparams.lr, curr_epoch)
     elif 'cifar' in hparams.dataset or ('svhn' in hparams.dataset and 'shake_shake' in hparams.model_name):
         lr = cosine_lr(hparams.lr, curr_epoch, iteration, batches_per_epoch,
-                    hparams.num_epochs)
+                       hparams.num_epochs)
     return lr
 
 

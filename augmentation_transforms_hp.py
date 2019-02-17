@@ -29,16 +29,16 @@ from PIL import ImageOps, ImageEnhance, ImageFilter, Image
 
 IMAGE_SIZE = 32
 # What is the dataset mean and std of the images on the training set
-MEANS = {'cifar10_50000':[0.49139968, 0.48215841, 0.44653091],
-         'cifar10_4000':[0.49056774, 0.48116026, 0.44726052],
-         'cifar100_50000':[0.50707516, 0.48654887, 0.44091784],
-         'svhn_1000':[0.45163885, 0.4557915, 0.48093327],
-         'svhn-full_604388':[0.43090966, 0.4302428, 0.44634357]}
-STDS = {'cifar10_50000':[0.24703223, 0.24348513, 0.26158784],
-        'cifar10_4000':[0.24710728, 0.24451308, 0.26235099],
-        'cifar100_50000':[0.26733429, 0.25643846, 0.27615047],
-        'svhn_1000':[0.20385217, 0.20957996, 0.20804394],
-        'svhn-full_604388':[0.19652855, 0.19832038, 0.19942076]}
+MEANS = {'cifar10_50000': [0.49139968, 0.48215841, 0.44653091],
+         'cifar10_4000': [0.49056774, 0.48116026, 0.44726052],
+         'cifar100_50000': [0.50707516, 0.48654887, 0.44091784],
+         'svhn_1000': [0.45163885, 0.4557915, 0.48093327],
+         'svhn-full_604388': [0.43090966, 0.4302428, 0.44634357]}
+STDS = {'cifar10_50000': [0.24703223, 0.24348513, 0.26158784],
+        'cifar10_4000': [0.24710728, 0.24451308, 0.26235099],
+        'cifar100_50000': [0.26733429, 0.25643846, 0.27615047],
+        'svhn_1000': [0.20385217, 0.20957996, 0.20804394],
+        'svhn-full_604388': [0.19652855, 0.19832038, 0.19942076]}
 PARAMETER_MAX = 10  # What is the max 'level' a transform could be predicted
 
 
@@ -56,33 +56,44 @@ def apply_policy(policy, img, aug_policy, dset):
       The result of applying `policy` to `img`.
     """
     if aug_policy == "cifar10":
-        count = np.random.choice([0, 1, 2, 3], p=[0.2, 0.3, 0.5, 0.0]) # 0.5 + 0.6 = 1.1
+        count = np.random.choice(
+            [0, 1, 2, 3], p=[0.2, 0.3, 0.5, 0.0])  # 0.5 + 0.6 = 1.1
     elif aug_policy == "11-23":
-        count = np.random.choice([0, 1, 2, 3], p=[0.2, 0.3, 0.4, 0.1]) # 1.4
+        count = np.random.choice([0, 1, 2, 3], p=[0.2, 0.3, 0.4, 0.1])  # 1.4
     elif aug_policy == "11-26":
-        count = np.random.choice([0, 1, 2, 3, 4], p=[0.25, 0.25, 0.25, 0.25, 0]) # 1.5
+        count = np.random.choice(
+            [0, 1, 2, 3, 4], p=[0.25, 0.25, 0.25, 0.25, 0])  # 1.5
     elif aug_policy == "11-29-a":
         count = np.random.choice([0, 1, 2, 3], p=[0.3, 0.3, 0.3, 0.1])
     elif aug_policy == "12-24-a":
-        count = np.random.choice([0, 1, 2], p=[0.291, 0.469, 0.240]) # based on autoaugment, 0.949
+        # based on autoaugment, 0.949
+        count = np.random.choice([0, 1, 2], p=[0.291, 0.469, 0.240])
     elif aug_policy == "12-24-b":
-        count = np.random.choice([0, 1, 2, 3, 4, 5], p=[0.3, 0.3, 0.25, 0.12, 0.02, 0.01]) # 1.29, theroy: tiny % of large
+        # 1.29, theroy: tiny % of large
+        count = np.random.choice([0, 1, 2, 3, 4, 5], p=[
+                                 0.3, 0.3, 0.25, 0.12, 0.02, 0.01])
     elif aug_policy == "12-24-c":
-        count = np.random.choice([0, 1, 2, 3, 4, 5], p=[0.3, 0.3, 0.20, 0.125, 0.05, 0.025]) # 1.4, theory: small % of large
+        count = np.random.choice([0, 1, 2, 3, 4, 5], p=[
+                                 0.3, 0.3, 0.20, 0.125, 0.05, 0.025])  # 1.4, theory: small % of large
     elif aug_policy == "12-24-d":
-        count = np.random.choice([0, 1, 2, 3, 4], p=[0.3, 0.4, 0.2, 0.075, 0.025]) # 1.125, theroy: low average but outliers
+        # 1.125, theroy: low average but outliers
+        count = np.random.choice(
+            [0, 1, 2, 3, 4], p=[0.3, 0.4, 0.2, 0.075, 0.025])
     elif aug_policy == "12-26-a":
-        count = np.random.choice([0, 1, 2, 3, 4], p=[0.3, 0.35, 0.2, 0.1, 0.05]) # 1.25 bad
+        count = np.random.choice(
+            [0, 1, 2, 3, 4], p=[0.3, 0.35, 0.2, 0.1, 0.05])  # 1.25 bad
     elif aug_policy == "12-26-b":
-        count = np.random.choice([0, 1, 2, 3, 4], p=[0.3, 0.45, 0.15, 0.075, 0.025]) # 1.075 bad
+        count = np.random.choice(
+            [0, 1, 2, 3, 4], p=[0.3, 0.45, 0.15, 0.075, 0.025])  # 1.075 bad
     elif aug_policy == "12-26-c":
-        count = np.random.choice([0, 1, 2, 3, 4], p=[0.3, 0.425, 0.2, 0.05, 0.025]) # 1.075
+        count = np.random.choice(
+            [0, 1, 2, 3, 4], p=[0.3, 0.425, 0.2, 0.05, 0.025])  # 1.075
     elif aug_policy == "11-28-a":
-        count = np.random.choice([0, 1, 2, 3], p=[0.3, 0.4, 0.2, 0.1]) # 1.2
+        count = np.random.choice([0, 1, 2, 3], p=[0.3, 0.4, 0.2, 0.1])  # 1.2
     elif aug_policy == "11-28-b":
-        count = np.random.choice([0, 1, 2, 3], p=[0.3, 0.45, 0.2, 0.05]) # 1.2
+        count = np.random.choice([0, 1, 2, 3], p=[0.3, 0.45, 0.2, 0.05])  # 1.2
     elif aug_policy == "1-15-a":
-        count = np.random.choice([0, 1, 2], p=[0.3, 0.5, 0.2]) # 0.9
+        count = np.random.choice([0, 1, 2], p=[0.3, 0.5, 0.2])  # 0.9
     elif aug_policy == "sanity":
         count = 0
     elif aug_policy == "sanity-2":

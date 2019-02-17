@@ -82,7 +82,8 @@ class DataSet(object):
                 split = len(raw_policy[0]) // 2
                 for pol in raw_policy:
                     if 'svhn' in hparams.dataset:
-                        cur_pol = parse_policy(pol[:split], augmentation_transforms)
+                        cur_pol = parse_policy(
+                            pol[:split], augmentation_transforms)
                     else:
                         cur_pol = parse_policy(
                             pol[:split], augmentation_transforms)
@@ -94,7 +95,8 @@ class DataSet(object):
             elif type(raw_policy) is list:
                 split = len(raw_policy) // 2
                 if 'svhn' in hparams.dataset:
-                    self.policy = parse_policy(raw_policy, augmentation_transforms)
+                    self.policy = parse_policy(
+                        raw_policy, augmentation_transforms)
                 else:
                     self.policy = parse_policy(
                         raw_policy[:split], augmentation_transforms)
@@ -109,7 +111,7 @@ class DataSet(object):
             if 'svhn' in hparams.dataset:
                 self.good_policies = found_policies.good_policies_svhn()
             else:
-                assert 'cifar' in hparams.dataset 
+                assert 'cifar' in hparams.dataset
                 self.good_policies = found_policies.good_policies()
 
         if hparams.dataset == 'cifar10' or hparams.dataset == 'cifar100':
@@ -183,13 +185,18 @@ class DataSet(object):
 
         if hparams.dataset == 'svhn':
             test_dataset_size = 26032
-            all_data = np.concatenate([train_loader.data, test_loader.data], axis=0)
-            all_labels = np.concatenate([train_loader.labels, test_loader.labels], axis=0)
+            all_data = np.concatenate(
+                [train_loader.data, test_loader.data], axis=0)
+            all_labels = np.concatenate(
+                [train_loader.labels, test_loader.labels], axis=0)
         elif hparams.dataset == 'svhn-full':
             test_dataset_size = 26032
-            all_data = np.concatenate([train_loader.data, extra_loader.data, test_loader.data], axis=0)
-            all_labels = np.concatenate([train_loader.labels, extra_loader.labels, test_loader.labels], axis=0)
-            print(train_loader.data.shape, test_loader.data.shape, extra_loader.data.shape)
+            all_data = np.concatenate(
+                [train_loader.data, extra_loader.data, test_loader.data], axis=0)
+            all_labels = np.concatenate(
+                [train_loader.labels, extra_loader.labels, test_loader.labels], axis=0)
+            print(train_loader.data.shape,
+                  test_loader.data.shape, extra_loader.data.shape)
         elif 'cifar' in hparams.dataset:
             for file_num, f in enumerate(datafiles):
                 d = unpickle(os.path.join(hparams.data_path, f))
@@ -214,8 +221,10 @@ class DataSet(object):
         # print(hparams.dataset, all_data.shape, type(all_data), all_data.dtype)
         all_data = all_data.transpose(0, 2, 3, 1).copy()
         all_data = all_data / 255.0
-        mean = augmentation_transforms.MEANS[hparams.dataset+"_"+str(hparams.train_size)]
-        std = augmentation_transforms.STDS[hparams.dataset+"_"+str(hparams.train_size)]
+        mean = augmentation_transforms.MEANS[hparams.dataset +
+                                             "_"+str(hparams.train_size)]
+        std = augmentation_transforms.STDS[hparams.dataset +
+                                           "_"+str(hparams.train_size)]
         tf.logging.info('mean:{}    std: {}'.format(mean, std))
 
         # all_data = (all_data - mean) / std
@@ -245,7 +254,7 @@ class DataSet(object):
             self.val_images = all_data[train_size:train_size + val_size]
             self.val_labels = all_labels[train_size:train_size + val_size]
             self.num_train = self.train_images.shape[0]
-        
+
         elif 'svhn' in hparams.dataset:
             assert hparams.eval_test
             self.test_images = all_data[-test_dataset_size:]

@@ -15,6 +15,7 @@ from ray.tune import grid_search, run_experiments
 from train_cifar import CifarModelTrainer
 from train import RayModel
 
+
 def main(_):
     from setup import create_parser, create_hparams
     FLAGS = create_parser("train")

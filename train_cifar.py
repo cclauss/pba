@@ -130,15 +130,15 @@ class CifarModel(object):
         else:
             raise ValueError()
         if dataset == 'cifar10' or dataset == 'cifar100' or self.mode == 'train':
-            self.images = tf.placeholder(tf.float32, [self.batch_size, 32, 32, 3])
+            self.images = tf.placeholder(
+                tf.float32, [self.batch_size, 32, 32, 3])
             self.labels = tf.placeholder(tf.float32,
-                                        [self.batch_size, self.num_classes])
+                                         [self.batch_size, self.num_classes])
         else:
             # svhn eval is weird
             self.images = tf.placeholder(tf.float32, [None, 32, 32, 3])
             self.labels = tf.placeholder(tf.float32,
-                                        [None, self.num_classes])
-
+                                         [None, self.num_classes])
 
     def assign_epoch(self, session, epoch_value):
         session.run(self._epoch_update, feed_dict={
