@@ -62,7 +62,7 @@ train_reduced_aa() {
     --train_size 1000 --val_size 0 --eval_test \
     --checkpoint_freq 0 --epochs 160 \
     --name sanity_aa --gpu 1 --cpu 2 --no_cutout \
-    --lr 0.005 --wd 0.005 --bs 128
+    --lr 0.05 --wd 0.005 --bs 128
 }
 
 train_reduced() {
@@ -79,15 +79,17 @@ train_reduced() {
     # --lr 0.025 --bs 8
 }
 
-search() {
+svhn_search() {
+    echo "[bash] Search on svhn"
     python search.py \
-    --model_name wrn --dataset svhn \
-    --train_size 1000 --val_size 7000 --eval_test \
-    --checkpoint_freq 0 --epochs 160 \
-    --num_samples 16 --perturbation_interval 3 \
-    --name svhn_1-18-a --gpu 0.16 --cpu 2 \
-    --no_cutout --lr 0.025 --bs 8 \
-    --explore 1-2-mod-bias --aug_policy 1-18-a --policy_type single --param_type fixed_magnitude
+    --local_dir /data/dho/ray_results_2 \
+    --model_name wrn_40_2 --dataset svhn \
+    --train_size 1000 --val_size 7325 --eval_test \
+    --checkpoint_freq 0 \
+    --name "svhn_search_2_16" --gpu 0.19 --cpu 2 \
+    --num_samples 16 --perturbation_interval 3 --epochs 160 \
+    --explore cifar10 --aug_policy cifar10 --no_cutout \
+    --lr 0.05 --wd 0.005
 }
 
 if [ "$1" = "train-reduced" ]; then

@@ -81,19 +81,25 @@ class DataSet(object):
                 self.policy = []
                 split = len(raw_policy[0]) // 2
                 for pol in raw_policy:
-                    cur_pol = parse_policy(
-                        pol[:split], augmentation_transforms)
-                    cur_pol.extend(parse_policy(
-                        pol[split:], augmentation_transforms))
+                    if 'svhn' in hparams.dataset:
+                        cur_pol = parse_policy(pol[:split], augmentation_transforms)
+                    else:
+                        cur_pol = parse_policy(
+                            pol[:split], augmentation_transforms)
+                        cur_pol.extend(parse_policy(
+                            pol[split:], augmentation_transforms))
                     self.policy.append(cur_pol)
                 tf.logging.info(
                     'using HP policy schedule, last: {}'.format(self.policy[-1]))
             elif type(raw_policy) is list:
                 split = len(raw_policy) // 2
-                self.policy = parse_policy(
-                    raw_policy[:split], augmentation_transforms)
-                self.policy.extend(parse_policy(
-                    raw_policy[split:], augmentation_transforms))
+                if 'svhn' in hparams.dataset:
+                    self.policy = parse_policy(raw_policy, augmentation_transforms)
+                else:
+                    self.policy = parse_policy(
+                        raw_policy[:split], augmentation_transforms)
+                    self.policy.extend(parse_policy(
+                        raw_policy[split:], augmentation_transforms))
                 tf.logging.info(
                     "using HP Policy, policy: {}".format(self.policy))
 
