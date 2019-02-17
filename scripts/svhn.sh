@@ -79,7 +79,7 @@ train_reduced() {
     # --lr 0.025 --bs 8
 }
 
-svhn_search() {
+search() {
     echo "[bash] Search on svhn"
     python search.py \
     --local_dir /data/dho/ray_results_2 \
@@ -109,7 +109,7 @@ elif [ "$1" = "train-full-aa" ]; then
     exit 1
 elif [ "$1" = "search" ]; then
     echo "[bash] search $@"
-    exit 1
+    search
 else
     echo "invalid args"
     exit 1
