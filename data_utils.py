@@ -84,6 +84,11 @@ class DataSet(object):
             self.test_labels = all_labels[-test_dataset_size:]
             all_data = all_data[:-test_dataset_size]
             all_labels = all_labels[:test_dataset_size]
+            np.random.seed(0)
+            perm = np.arange(len(all_data))
+            np.random.shuffle(perm)
+            all_data = all_data[perm]
+            all_labels = all_labels[perm]
             train_size, val_size = hparams.train_size, hparams.validation_size
             if hparams.dataset == 'svhn-full':
                 assert train_size + val_size <= 604388
@@ -193,6 +198,7 @@ class DataSet(object):
             total_dataset_size = 10000 * num_data_batches_to_load
             if hparams.eval_test:
                 total_dataset_size += 10000
+
             if hparams.dataset == 'cifar10':
                 all_data = np.empty(
                     (total_batches_to_load, 10000, 3072), dtype=np.uint8)
@@ -271,10 +277,10 @@ class DataSet(object):
         tf.logging.info('mean:{}    std: {}'.format(mean, std))
 
         all_data = (all_data - mean) / std
+        all_labels = np.eye(num_classes)[np.array(all_labels, dtype=np.int32)]
         assert len(all_data) == len(all_labels)
         tf.logging.info(
             'In {} loader, number of images: {}'.format(hparams.dataset, len(all_data)))
-        all_labels = np.eye(num_classes)[np.array(all_labels, dtype=np.int32)]
         return all_data, all_labels
 
 
