@@ -79,6 +79,7 @@ class DataSet(object):
             self.val_labels = all_labels[train_size:train_size + val_size]
             self.num_train = self.train_images.shape[0]
         elif 'svhn' in hparams.dataset:
+            # print('all label dist', all_labels.sum(axis=(0)) / all_labels.sum())
             assert hparams.eval_test
             test_dataset_size = 26032
             self.test_images = all_data[-test_dataset_size:]
@@ -86,11 +87,14 @@ class DataSet(object):
             
             all_data = all_data[:-test_dataset_size]
             all_labels = all_labels[:-test_dataset_size]
+
+            # it seems like without shuffling the dataset is kinda lacking
             np.random.seed(0)
             perm = np.arange(len(all_data))
             np.random.shuffle(perm)
             all_data = all_data[perm]
             all_labels = all_labels[perm]
+
             train_size, val_size = hparams.train_size, hparams.validation_size
             if hparams.dataset == 'svhn-full':
                 assert train_size + val_size <= 604388
@@ -101,6 +105,8 @@ class DataSet(object):
             self.val_images = all_data[-val_size:]
             self.val_labels = all_labels[-val_size:]
             self.num_train = self.train_images.shape[0]
+
+            # print('train dist', self.train_labels.sum(axis=(0)) / self.train_labels.sum())
 
         # mean = self.train_images.mean(axis=(0,1,2))
         # std = self.train_images.std(axis=(0,1,2))
@@ -334,6 +340,7 @@ class DataSet(object):
                 # no extra
                 final_img = data
             if self.hparams.dataset == 'cifar10' or self.hparams.dataset == 'cifar100':
+                assert 'svhn' not in self.hparams.dataset
                 final_img = self.augmentation_transforms.random_flip(
                     self.augmentation_transforms.zero_pad_and_crop(final_img, 4))
             else:
