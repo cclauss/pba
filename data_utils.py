@@ -204,6 +204,7 @@ class DataSet(object):
                 datafiles = datafiles[:train_batches_to_load]
                 if hparams.eval_test:
                     datafiles.append('test_batch')
+                num_classes = 10
             elif hparams.dataset == 'cifar100':
                 assert num_data_batches_to_load == 5
                 all_data = np.empty((1, 50000, 3072), dtype=np.uint8)
