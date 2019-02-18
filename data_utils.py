@@ -227,7 +227,7 @@ class DataSet(object):
                                            "_"+str(hparams.train_size)]
         tf.logging.info('mean:{}    std: {}'.format(mean, std))
 
-        # all_data = (all_data - mean) / std
+        all_data = (all_data - mean) / std
         all_labels = np.eye(num_classes)[np.array(all_labels, dtype=np.int32)]
         assert len(all_data) == len(all_labels)
         tf.logging.info(
