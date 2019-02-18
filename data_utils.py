@@ -82,13 +82,14 @@ class DataSet(object):
             test_dataset_size = 26032
             self.test_images = all_data[-test_dataset_size:]
             self.test_labels = all_labels[-test_dataset_size:]
+            
             all_data = all_data[:-test_dataset_size]
-            all_labels = all_labels[:test_dataset_size]
-            np.random.seed(0)
-            perm = np.arange(len(all_data))
-            np.random.shuffle(perm)
-            all_data = all_data[perm]
-            all_labels = all_labels[perm]
+            all_labels = all_labels[:-test_dataset_size]
+            # np.random.seed(0)
+            # perm = np.arange(len(all_data))
+            # np.random.shuffle(perm)
+            # all_data = all_data[perm]
+            # all_labels = all_labels[perm]
             train_size, val_size = hparams.train_size, hparams.validation_size
             if hparams.dataset == 'svhn-full':
                 assert train_size + val_size <= 604388
