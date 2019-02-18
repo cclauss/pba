@@ -26,16 +26,16 @@ svhn_wrn_40_2_grid_search() {
     --model_name wrn_40_2 --dataset svhn \
     --train_size 1000 --val_size 0 --eval_test \
     --checkpoint_freq 0 \
-    --gpu 0.19 --cpu 1 \
-    --use_hp_policy --hp_policy "/data/dho/pba/schedules/reduced_cifar_10/16_wrn.txt" \
-    --explore cifar10 \
-    --hp_policy_epochs 200 \
-    --aug_policy cifar10 --name "svhn_grid_search"
+    --gpu 0.166 --cpu 1 \
+    --explore cifar10 --no_cutout --name "svhn_gs"
 }
 
 if [ "$1" = "aug_11-23" ]; then
     echo "[bash] $@"
     wrn_40_2_grid_search 11-23
+elif [ "$1" = "svhn" ]; then
+    echo "[bash] $@"
+    svhn_wrn_40_2_grid_search
 else
     echo "invalid args"
 fi
