@@ -53,6 +53,7 @@ class DataSet(object):
 
         self.parse_policy(hparams)
         all_data, all_labels = self.load_data(hparams)
+        assert len(all_data) == len(all_labels)
         # print(hparams.dataset, all_data.shape, type(all_data), all_data.dtype)
 
         # Break off test data
@@ -85,11 +86,11 @@ class DataSet(object):
             
             all_data = all_data[:-test_dataset_size]
             all_labels = all_labels[:-test_dataset_size]
-            # np.random.seed(0)
-            # perm = np.arange(len(all_data))
-            # np.random.shuffle(perm)
-            # all_data = all_data[perm]
-            # all_labels = all_labels[perm]
+            np.random.seed(0)
+            perm = np.arange(len(all_data))
+            np.random.shuffle(perm)
+            all_data = all_data[perm]
+            all_labels = all_labels[perm]
             train_size, val_size = hparams.train_size, hparams.validation_size
             if hparams.dataset == 'svhn-full':
                 assert train_size + val_size <= 604388
@@ -112,10 +113,13 @@ class DataSet(object):
         # std = self.test_images.std(axis=(0,1,2))
         # tf.logging.info('[test] mean:{}    std: {}'.format(mean, std))
         # exit()
+        assert len(self.test_images) == len(self.test_labels)
+        assert len(self.train_images) == len(self.train_labels)
 
         if hparams.eval_test:
             tf.logging.info("train dataset size: {}, test: {}, val: {}".format(
                 train_size, len(self.test_images), val_size))
+            assert len(self.val_images) == len(self.val_labels)
         else:
             tf.logging.info("train dataset size: {}, NO test, val: {}".format(
                 train_size, val_size))
