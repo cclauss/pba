@@ -83,14 +83,14 @@ train_reduced() {
     --model_name wrn --dataset svhn \
     --train_size 1000 --val_size 0 --eval_test \
     --checkpoint_freq 0 --epochs 160 \
-    --name svhn_1-16-a-eval --gpu 1 --cpu 2 \
-    --use_hp_policy --hp_policy "/data/dho/fast-hp-search/experiments/autoaugment/ray/schedules/svhn/policy_2-1-16-a.txt" \
-    --hp_policy_epochs 160 \
-    --explore 12-4-b-mod --aug_policy 11-26 --policy_type single --param_type fixed_magnitude \
-    # --lr 0.005 --wd 0.005 --bs 128
-    # --lr 0.025 --bs 8
+    --name svhn_eval_with_cifar_pol --gpu 1 --cpu 2 \
+    --use_hp_policy --hp_policy "/data/dho/pba/schedules/reduced_cifar_10/16_wrn.txt" \
+    --hp_policy_epochs 200 \
+    --explore cifar10 --aug_policy cifar10 \
+    --lr 0.05 --wd 0.0005
 }
 
+# name aug_policy lr
 search() {
     echo "[bash] Search on svhn"
     python search.py \
@@ -98,11 +98,19 @@ search() {
     --model_name wrn_40_2 --dataset svhn \
     --train_size 1000 --val_size 7325 --eval_test \
     --checkpoint_freq 0 \
-    --name "svhn_search_2_19" --gpu 0.19 --cpu 2 \
+    --name "$2" --gpu 0.19 --cpu 2 \
     --num_samples 16 --perturbation_interval 3 --epochs 160 \
-    --explore cifar10 --aug_policy cifar10 --no_cutout \
-    --lr 0.05 --wd 0.0005
+    --explore cifar10 --aug_policy "$3" --no_cutout \
+    --lr "$4" --wd 0.0005
 }
+
+# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_a cifar10 0.10
+# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_a cifar10 0.025
+# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_a 1-17-a 0.05
+# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_a 1-18-a 0.05
+# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_a 1-18-b 0.05
+# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_a 11-23 0.05
+# ./scripts/svhn.sh train-reduced
 
 if [ "$1" = "train-reduced" ]; then
     echo "[bash] train-reduced $@"
@@ -124,7 +132,7 @@ elif [ "$1" = "train-full-aa" ]; then
     exit 1
 elif [ "$1" = "search" ]; then
     echo "[bash] search $@"
-    search
+    search "$@"
 else
     echo "invalid args"
     exit 1

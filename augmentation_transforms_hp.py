@@ -68,32 +68,16 @@ def apply_policy(policy, img, aug_policy, dset):
     elif aug_policy == "12-24-a":
         # based on autoaugment, 0.949
         count = np.random.choice([0, 1, 2], p=[0.291, 0.469, 0.240])
-    elif aug_policy == "12-24-b":
-        # 1.29, theroy: tiny % of large
-        count = np.random.choice([0, 1, 2, 3, 4, 5], p=[
-                                 0.3, 0.3, 0.25, 0.12, 0.02, 0.01])
-    elif aug_policy == "12-24-c":
-        count = np.random.choice([0, 1, 2, 3, 4, 5], p=[
-                                 0.3, 0.3, 0.20, 0.125, 0.05, 0.025])  # 1.4, theory: small % of large
-    elif aug_policy == "12-24-d":
-        # 1.125, theroy: low average but outliers
-        count = np.random.choice(
-            [0, 1, 2, 3, 4], p=[0.3, 0.4, 0.2, 0.075, 0.025])
-    elif aug_policy == "12-26-a":
-        count = np.random.choice(
-            [0, 1, 2, 3, 4], p=[0.3, 0.35, 0.2, 0.1, 0.05])  # 1.25 bad
-    elif aug_policy == "12-26-b":
-        count = np.random.choice(
-            [0, 1, 2, 3, 4], p=[0.3, 0.45, 0.15, 0.075, 0.025])  # 1.075 bad
-    elif aug_policy == "12-26-c":
-        count = np.random.choice(
-            [0, 1, 2, 3, 4], p=[0.3, 0.425, 0.2, 0.05, 0.025])  # 1.075
-    elif aug_policy == "11-28-a":
-        count = np.random.choice([0, 1, 2, 3], p=[0.3, 0.4, 0.2, 0.1])  # 1.2
-    elif aug_policy == "11-28-b":
-        count = np.random.choice([0, 1, 2, 3], p=[0.3, 0.45, 0.2, 0.05])  # 1.2
-    elif aug_policy == "1-15-a":
-        count = np.random.choice([0, 1, 2], p=[0.3, 0.5, 0.2])  # 0.9
+    elif aug_policy == ("1-15-a"):
+        count = np.random.choice([0, 1, 2], p=[0.3, 0.5, 0.2]) # 0.9
+    elif aug_policy == ("1-15-b"):
+        count = np.random.choice([0, 1, 2], p=[0.35, 0.4, 0.25]) # 0.9
+    elif aug_policy == ("1-17-a"):
+        count = np.random.choice([0, 1, 2], p=[0.1, 0.5, 0.4])
+    elif aug_policy == ("1-18-a"):
+        count = np.random.choice([0, 1, 2, 3], p=[0.05, 0.45, 0.25, 0.25])
+    elif aug_policy == ("1-18-b"):
+        count = np.random.choice([0, 1, 2, 3], p=[0.05, 0.55, 0.3, 0.1])
     elif aug_policy == "sanity":
         count = 0
     elif aug_policy == "sanity-2":
