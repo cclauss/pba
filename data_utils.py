@@ -161,7 +161,7 @@ class DataSet(object):
                 self.policy = []
                 split = len(raw_policy[0]) // 2
                 for pol in raw_policy:
-                    if 'svhn' in hparams.dataset:
+                    if False: #'svhn' in hparams.dataset:
                         cur_pol = parse_policy(
                             pol[:split], self.augmentation_transforms)
                     else:
@@ -174,7 +174,7 @@ class DataSet(object):
                     'using HP policy schedule, last: {}'.format(self.policy[-1]))
             elif type(raw_policy) is list:
                 split = len(raw_policy) // 2
-                if 'svhn' in hparams.dataset:
+                if False: #'svhn' in hparams.dataset:
                     self.policy = parse_policy(
                         raw_policy, self.augmentation_transforms)
                 else:

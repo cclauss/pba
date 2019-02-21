@@ -98,7 +98,7 @@ search() {
     --model_name wrn_40_2 --dataset svhn \
     --train_size 1000 --val_size 7325 --eval_test \
     --checkpoint_freq 0 \
-    --name "svhn_search_2_18" --gpu 0.19 --cpu 2 \
+    --name "svhn_search_2_19" --gpu 0.19 --cpu 2 \
     --num_samples 16 --perturbation_interval 3 --epochs 160 \
     --explore cifar10 --aug_policy cifar10 --no_cutout \
     --lr 0.05 --wd 0.0005

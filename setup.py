@@ -108,10 +108,10 @@ def create_hparams(state, FLAGS):
         hparams.add_hparam('no_aug', False)
         hparams.add_hparam('use_hp_policy', True)
         # default start value of 0
-        if 'svhn' in hparams.dataset:
+        if False: # 'svhn' in hparams.dataset:
             hparams.add_hparam(
                 'hp_policy', [0 for _ in range(2 * NUM_HP_TRANSFORM)])
-        elif 'cifar' in hparams.dataset:
+        elif True: # 'cifar' in hparams.dataset:
             hparams.add_hparam(
                 'hp_policy', [0 for _ in range(4 * NUM_HP_TRANSFORM)])
     else:
