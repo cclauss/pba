@@ -85,7 +85,7 @@ train_reduced() {
     --checkpoint_freq 0 --epochs 160 \
     --name svhn_eval_with_cifar_pol --gpu 1 --cpu 2 \
     --use_hp_policy --hp_policy "/data/dho/pba/schedules/reduced_cifar_10/16_wrn.txt" \
-    --hp_policy_epochs 200 \
+    --hp_policy_epochs 160 \
     --explore cifar10 --aug_policy cifar10 \
     --lr 0.05 --wd 0.0005
 }
@@ -101,15 +101,19 @@ search() {
     --name "$2" --gpu 0.19 --cpu 2 \
     --num_samples 16 --perturbation_interval 3 --epochs 160 \
     --explore cifar10 --aug_policy "$3" --no_cutout \
-    --lr "$4" --wd 0.0005
+    --lr "$4" --wd "$5"
 }
 
-# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_a cifar10 0.10
-# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_a cifar10 0.025
-# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_a 1-17-a 0.05
-# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_a 1-18-a 0.05
-# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_a 1-18-b 0.05
-# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_a 11-23 0.05
+# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_a cifar10 0.10 |& tee svhn_search_2_20_a
+# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_b cifar10 0.025 |& tee svhn_search_2_20_b
+# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_c 1-17-a 0.05 |& tee svhn_search_2_20_c
+# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_d 1-18-a 0.05 |& tee svhn_search_2_20_d
+# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_e 1-18-b 0.05 0.0005 |& tee svhn_search_2_20_e
+# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_f 11-23 0.05 0.0005 |& tee svhn_search_2_20_f
+# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_g 11-23 0.05 0.00005 |& tee svhn_search_2_20_g
+# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_i 11-23 0.05 0.01 |& tee svhn_search_2_20_i
+# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_j 11-23 0.05 0.005 |& tee svhn_search_2_20_j
+# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_h 11-23 0.05 0.02 |& tee svhn_search_2_20_h
 # ./scripts/svhn.sh train-reduced
 
 if [ "$1" = "train-reduced" ]; then
