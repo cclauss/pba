@@ -39,7 +39,7 @@ svhn_pba_wrn_40_2_grid_search() {
     --train_size 1000 --val_size 0 --eval_test \
     --checkpoint_freq 0 \
     --explore cifar10 --no_cutout --name "pba_gs_$2_wrn402" \
-    --hp_policy_epochs 160 \
+    --hp_policy_epochs 160 --epochs 200 \
     --use_hp_policy --hp_policy "/data/dho/pba/schedules/svhn/$2.txt" 
 }
 
@@ -52,7 +52,7 @@ svhn_pba_wrn_28_10_grid_search() {
     --train_size 1000 --val_size 0 --eval_test \
     --checkpoint_freq 0 \
     --explore cifar10 --no_cutout --name "pba_gs_$2_wrn2810" \
-    --hp_policy_epochs 160 \
+    --hp_policy_epochs 160 --epochs 200 \
     --use_hp_policy --hp_policy "/data/dho/pba/schedules/svhn/$2.txt"
 }
 
@@ -65,7 +65,7 @@ svhn_pba_ss_96_grid_search() {
     --train_size 1000 --val_size 0 --eval_test \
     --checkpoint_freq 0 \
     --explore cifar10 --no_cutout --name "pba_gs_$2_ss96" \
-    --hp_policy_epochs 160 \
+    --hp_policy_epochs 160 --epochs 200 \
     --use_hp_policy --hp_policy "/data/dho/pba/schedules/svhn/$2.txt"
 }
 
