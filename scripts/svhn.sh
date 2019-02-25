@@ -12,7 +12,7 @@ eval_svhn() {
         size=1000
         name="reduced_svhn_$2_$4"
         dataset="svhn"
-    elif [ "$4" = "svhn" ]; then
+    elif [ "$4" = "svhn-full" ]; then
         size=604388
         name="svhn_$2_$4"
         dataset="svhn-full"
