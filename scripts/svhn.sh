@@ -2,6 +2,38 @@
 # export PYTHONPATH="$(pwd)"
 # export OMP_NUM_THREADS=2
 
+# ./scripts/svhn.sh eval_svhn shake_shake_96 5 r-svhn svhn_2_23_b_policy_15
+# ./scripts/svhn.sh eval_svhn shake_shake_96 5 r-svhn svhn_2_23_d_policy_11
+
+# args: [] [model name] [number of times] [dataset name] [policy name]
+eval_svhn() {
+    echo "model: $2, trials: $3, policy: $5"
+    if [ "$4" = "r-svhn" ]; then
+        size=1000
+        name="reduced_svhn_$2_$4"
+        dataset="svhn"
+    elif [ "$4" = "svhn" ]; then
+        size=604388
+        name="svhn_$2_$4"
+        dataset="svhn-full"
+    else
+        echo "invalid dataset"
+    fi
+
+    python train.py \
+    --local_dir /data/dho/ray_results_2/svhn \
+    --model_name "$2" --dataset "$dataset" \
+    --train_size "$size" --val_size 0 --eval_test \
+    --checkpoint_freq 50 \
+    --gpu 1 --cpu 3 \
+    --use_hp_policy --hp_policy "/data/dho/pba/schedules/svhn/$5.txt" \
+    --explore cifar10 \
+    --hp_policy_epochs 160 --epochs 160 \
+    --aug_policy cifar10 --name "$name" --num_samples "$3"
+
+    # using default lr / wd
+}
+
 train_clean() {
     python train.py \
     --local_dir /data/dho/ray_results_2/svhn \
@@ -110,10 +142,11 @@ search() {
 # CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_d 1-18-a 0.05 |& tee svhn_search_2_20_d
 # CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_e 1-18-b 0.05 0.0005 |& tee svhn_search_2_20_e
 # CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_f 11-23 0.05 0.0005 |& tee svhn_search_2_20_f
-# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_g 11-23 0.05 0.00005 |& tee svhn_search_2_20_g
-# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_i 11-23 0.05 0.01 |& tee svhn_search_2_20_i
-# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_j 11-23 0.05 0.005 |& tee svhn_search_2_20_j
-# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_h 11-23 0.05 0.02 |& tee svhn_search_2_20_h
+# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_i cifar10 0.05 0.01 |& tee svhn_search_2_20_i
+# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_j cifar10 0.05 0.005 |& tee svhn_search_2_20_j
+
+# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_g2 cifar10 0.05 0.00005 |& tee svhn_search_2_20_g2
+# CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_h2 cifar10 0.05 0.02 |& tee svhn_search_2_20_h2
 # ./scripts/svhn.sh train-reduced
 
 if [ "$1" = "train-reduced" ]; then
@@ -137,6 +170,9 @@ elif [ "$1" = "train-full-aa" ]; then
 elif [ "$1" = "search" ]; then
     echo "[bash] search $@"
     search "$@"
+elif [ "$1" = "eval_svhn" ]; then
+    echo "[bash] eval $@"
+    eval_svhn "$@"
 else
     echo "invalid args"
     exit 1

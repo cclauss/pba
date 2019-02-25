@@ -155,6 +155,8 @@ def get_lr(curr_epoch, hparams, iteration=None):
     elif 'cifar' in hparams.dataset or ('svhn' in hparams.dataset and 'shake_shake' in hparams.model_name):
         lr = cosine_lr(hparams.lr, curr_epoch, iteration, batches_per_epoch,
                        hparams.num_epochs)
+    else:
+        raise ValueError("unknown model+dataset")
     return lr
 
 

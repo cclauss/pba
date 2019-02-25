@@ -40,7 +40,7 @@ svhn_pba_wrn_40_2_grid_search() {
     --checkpoint_freq 0 \
     --explore cifar10 --no_cutout --name "pba_gs_$2_wrn402" \
     --hp_policy_epochs 160 \
-    --use_hp_policy --hp_policy "/data/dho/pba/schedules/svhn/$2.txt" \
+    --use_hp_policy --hp_policy "/data/dho/pba/schedules/svhn/$2.txt" 
 }
 
 svhn_pba_wrn_28_10_grid_search() {
@@ -53,7 +53,7 @@ svhn_pba_wrn_28_10_grid_search() {
     --checkpoint_freq 0 \
     --explore cifar10 --no_cutout --name "pba_gs_$2_wrn2810" \
     --hp_policy_epochs 160 \
-    --use_hp_policy --hp_policy "/data/dho/pba/schedules/svhn/$2.txt" \
+    --use_hp_policy --hp_policy "/data/dho/pba/schedules/svhn/$2.txt"
 }
 
 svhn_pba_ss_96_grid_search() {
@@ -66,13 +66,14 @@ svhn_pba_ss_96_grid_search() {
     --checkpoint_freq 0 \
     --explore cifar10 --no_cutout --name "pba_gs_$2_ss96" \
     --hp_policy_epochs 160 \
-    --use_hp_policy --hp_policy "/data/dho/pba/schedules/svhn/$2.txt" \
+    --use_hp_policy --hp_policy "/data/dho/pba/schedules/svhn/$2.txt"
 }
 
 # ./scripts/grid_search.sh svhn_pba_wrn_40_2 svhn_2_23_b_policy_15
 # ./scripts/grid_search.sh svhn_pba_wrn_40_2 svhn_2_23_d_policy_11
 # ./scripts/grid_search.sh svhn_pba_wrn_28_10 svhn_2_23_b_policy_15
 # ./scripts/grid_search.sh svhn_pba_wrn_28_10 svhn_2_23_d_policy_11
+
 # ./scripts/grid_search.sh svhn_pba_ss_96 svhn_2_23_b_policy_15
 # ./scripts/grid_search.sh svhn_pba_ss_96 svhn_2_23_d_policy_11
 
