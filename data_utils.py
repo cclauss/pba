@@ -347,7 +347,11 @@ class DataSet(object):
                 assert "svhn" in self.hparams.dataset
             # Apply cutout
             if not self.hparams.no_cutout:
-                final_img = self.augmentation_transforms.cutout_numpy(final_img)
+                if 'cifar' in self.hparams.dataset:
+                    final_img = self.augmentation_transforms.cutout_numpy(final_img)
+                else:
+                    assert 'svhn' in self.hparams.dataset
+                    final_img = self.augmentation_transforms.cutout_numpy(final_img, size=20)
             final_imgs.append(final_img)
         batched_data = (np.array(final_imgs, np.float32), labels)
         self.curr_train_index += self.hparams.batch_size

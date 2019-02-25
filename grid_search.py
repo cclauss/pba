@@ -33,7 +33,7 @@ def main(_):
         "config": hparams.values(),
         "local_dir": FLAGS.local_dir,
         "checkpoint_freq": FLAGS.checkpoint_freq,
-        "num_samples": 3
+        "num_samples": 5
     }
 
     if FLAGS.restore:
@@ -48,8 +48,8 @@ def main(_):
     # train_spec["config"]["lr"] = grid_search([0.0125, 0.025, 0.05, 0.1, 0.2])
     # train_spec["config"]["wd"] = grid_search([0.0005, 0.00125, 0.0025, 0.005, 0.01, 0.02])
 
-    train_spec["config"]["lr"] = grid_search([0.025, 0.05, 0.1])
-    train_spec["config"]["wd"] = grid_search([0.0005, 0.00125, 0.0025, 0.005, 0.01, 0.02])
+    train_spec["config"]["lr"] = grid_search([0.05, 0.1, 0.2])
+    train_spec["config"]["wd"] = grid_search([0.0005, 0.0025, 0.005, 0.01, 0.025, 0.05])
 
     ray.init()
     run_experiments({FLAGS.name: train_spec}, verbose=False)
