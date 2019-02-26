@@ -138,8 +138,8 @@ class DataSet(object):
             self.augmentation_transforms = augmentation_transforms
 
             if type(hparams.hp_policy) is str and hparams.hp_policy.endswith(".txt"):
-                if (hparams.num_epochs % hparams.hp_policy_epochs != 0):
-                    print("WARNING: MISMATCHING EPOCHS VS SCHEDULE LEGNTH", hparams.num_epochs, hparams.hp_policy_epochs)
+                assert hparams.num_epochs % hparams.hp_policy_epochs == 0, (
+                    hparams.num_epochs, hparams.hp_policy_epochs)
                 tf.logging.info("schedule policy trained on {} epochs, parsing from: {}, multiplier: {}".format(
                     hparams.hp_policy_epochs, hparams.hp_policy, hparams.num_epochs//hparams.hp_policy_epochs))
                 raw_policy = parse_log_schedule(

@@ -38,38 +38,38 @@ eval_svhn() {
     # using default lr / wd
 }
 
-train_clean() {
-    python train.py \
-    --local_dir /data/dho/ray_results_2/svhn \
-    --model_name wrn_40_2 --dataset svhn-full \
-    --train_size 604388 --val_size 0 --eval_test \
-    --checkpoint_freq 10 --epochs 160 \
-    --name svhn_full_clean --gpu 1 --cpu 6 \
-    --lr 0.005 --wd 0.001 --bs 128
-}
+# train_clean() {
+#     python train.py \
+#     --local_dir /data/dho/ray_results_2/svhn \
+#     --model_name wrn_40_2 --dataset svhn-full \
+#     --train_size 604388 --val_size 0 --eval_test \
+#     --checkpoint_freq 10 --epochs 160 \
+#     --name svhn_full_clean --gpu 1 --cpu 6 \
+#     --lr 0.005 --wd 0.001 --bs 128
+# }
 
-train_aa() {
-    python train.py \
-    --local_dir /data/dho/ray_results_2/svhn \
-    --model_name wrn --dataset svhn-full \
-    --train_size 604388 --val_size 0 --eval_test \
-    --checkpoint_freq 10 --epochs 160 \
-    --name svhn_full_autoaug_wrn --gpu 1 --cpu 2 \
-    --lr 0.005 --wd 0.001 --bs 128
-}
+# train_aa() {
+#     python train.py \
+#     --local_dir /data/dho/ray_results_2/svhn \
+#     --model_name wrn --dataset svhn-full \
+#     --train_size 604388 --val_size 0 --eval_test \
+#     --checkpoint_freq 10 --epochs 160 \
+#     --name svhn_full_autoaug_wrn --gpu 1 --cpu 2 \
+#     --lr 0.005 --wd 0.001 --bs 128
+# }
 
-train() {
-    python train.py \
-    --local_dir /data/dho/ray_results_2/svhn \
-    --model_name wrn_40_2 --dataset svhn-full \
-    --train_size 604388 --val_size 0 --eval_test \
-    --checkpoint_freq 10 --epochs 160 \
-    --name svhn_full_autoaug_wrn_cifarpol --gpu 1 --cpu 2 \
-    --use_hp_policy --hp_policy "/data/dho/fast-hp-search/experiments/autoaugment/ray/schedules/policy_6-lowmag-wrn-16-200ep-4k.txt" \
-    --hp_policy_epochs 200 \
-    --policy_type double --param_type fixed_magnitude \
-    # --lr 0.005 --wd 0.001 --bs 128
-}
+# train() {
+#     python train.py \
+#     --local_dir /data/dho/ray_results_2/svhn \
+#     --model_name wrn_40_2 --dataset svhn-full \
+#     --train_size 604388 --val_size 0 --eval_test \
+#     --checkpoint_freq 10 --epochs 160 \
+#     --name svhn_full_autoaug_wrn_cifarpol --gpu 1 --cpu 2 \
+#     --use_hp_policy --hp_policy "/data/dho/fast-hp-search/experiments/autoaugment/ray/schedules/policy_6-lowmag-wrn-16-200ep-4k.txt" \
+#     --hp_policy_epochs 200 \
+#     --policy_type double --param_type fixed_magnitude \
+#     # --lr 0.005 --wd 0.001 --bs 128
+# }
 
 train_reduced_clean() {
     python train.py \
@@ -113,7 +113,7 @@ train_reduced_aa() {
     --lr 0.05 --wd 0.005 --bs 128
 }
 
-# ./scripts/svhn.sh train-reduced reduced_cifar_10/16_wrn rsvhn_cifarpol_wrn_2810 wrn_28_10 0.05 0.05 160 |& tee rsvhn_cifarpol_wrn2810.txt
+# ./scripts/svhn.sh train-reduced reduced_cifar_10/16_wrn_160 rsvhn_cifarpol_wrn_2810 wrn_28_10 0.05 0.05 160 |& tee rsvhn_cifarpol_wrn2810.txt
 # ./scripts/svhn.sh train-reduced svhn/svhn_2_23_b_policy_15 rsvhn_svhnpol_ss96 shake_shake_96 0.005 0.005 160 |& tee rsvhn_svhnpol_ss96.txt
 # ./scripts/svhn.sh train-reduced svhn/svhn_2_23_b_policy_15 rsvhn_svhnpol_ss96 shake_shake_96 0.005 0.005 1760 |& tee rsvhn_svhnpol_ss96.txt
 
@@ -126,7 +126,7 @@ train_reduced() {
     --checkpoint_freq 0 --epochs $7 \
     --name $3 --gpu 1 --cpu 6 \
     --use_hp_policy --hp_policy "/data/dho/pba/schedules/$2.txt" \
-    --explore cifar10 --aug_policy cifar10 \
+    --explore cifar10 --aug_policy cifar10 --hp_policy_epochs 160 \
     --lr $5 --wd $6 --num_samples 5
 }
 
