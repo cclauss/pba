@@ -127,7 +127,7 @@ train_reduced() {
     --name $3 --gpu 1 --cpu 6 \
     --use_hp_policy --hp_policy "/data/dho/pba/schedules/$2.txt" \
     --explore cifar10 --aug_policy cifar10 --hp_policy_epochs 160 \
-    --lr $5 --wd $6 --num_samples 5
+    --lr $5 --wd $6 --num_samples 5 --no_cutout
 }
 
 # name aug_policy lr
