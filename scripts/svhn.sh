@@ -5,9 +5,12 @@
 # ./scripts/svhn.sh eval_svhn shake_shake_96 5 r-svhn svhn_2_23_b_policy_15
 # ./scripts/svhn.sh eval_svhn shake_shake_96 5 r-svhn svhn_2_23_d_policy_11
 
+
+# ./scripts/svhn.sh eval_svhn wrn_28_10 1 svhn-full
+
 # args: [] [model name] [number of times] [dataset name] [policy name]
 eval_svhn() {
-    echo "model: $2, trials: $3, policy: $5"
+    echo "model: $2, trials: $3"
     if [ "$4" = "r-svhn" ]; then
         size=1000
         name="reduced_svhn_$2_$4"
@@ -24,9 +27,9 @@ eval_svhn() {
     --local_dir /data/dho/ray_results_2/svhn \
     --model_name "$2" --dataset "$dataset" \
     --train_size "$size" --val_size 0 --eval_test \
-    --checkpoint_freq 50 \
-    --gpu 1 --cpu 3 \
-    --use_hp_policy --hp_policy "/data/dho/pba/schedules/svhn/$5.txt" \
+    --checkpoint_freq 5 \
+    --gpu 1 --cpu 8 \
+    --use_hp_policy --hp_policy "/data/dho/pba/schedules/svhn/svhn_2_23_b_policy_15.txt" \
     --explore cifar10 \
     --hp_policy_epochs 160 --epochs 160 \
     --aug_policy cifar10 --name "$name" --num_samples "$3"
