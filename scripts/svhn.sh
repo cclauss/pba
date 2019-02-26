@@ -7,6 +7,7 @@
 
 
 # ./scripts/svhn.sh eval_svhn wrn_28_10 1 svhn-full
+# ./scripts/svhn.sh eval_svhn shake_shake_96 1 svhn-full |& tee svhn_full_ss96.txt
 
 # args: [] [model name] [number of times] [dataset name] [policy name]
 eval_svhn() {
@@ -112,17 +113,22 @@ train_reduced_aa() {
     --lr 0.05 --wd 0.005 --bs 128
 }
 
+# ./scripts/svhn.sh reduced_cifar_10/16_wrn rsvhn_cifarpol_wrn_2810 wrn_28_10 0.05 0.05 160 |& tee rsvhn_cifarpol_wrn2810.txt
+# ./scripts/svhn.sh svhn/svhn_2_23_b_policy_15 rsvhn_svhnpol_ss96 shake_shake_96 0.005 0.005 160 |& tee rsvhn_svhnpol_ss96.txt
+# ./scripts/svhn.sh svhn/svhn_2_23_b_policy_15 rsvhn_svhnpol_ss96 shake_shake_96 0.005 0.005 1760 |& tee rsvhn_svhnpol_ss96.txt
+
+# [] policy name name model_name lr wd epochs
 train_reduced() {
     python train.py \
     --local_dir /data/dho/ray_results_2/svhn \
-    --model_name wrn --dataset svhn \
+    --model_name $4 --dataset svhn \
     --train_size 1000 --val_size 0 --eval_test \
-    --checkpoint_freq 0 --epochs 160 \
-    --name svhn_eval_with_cifar_pol --gpu 1 --cpu 2 \
-    --use_hp_policy --hp_policy "/data/dho/pba/schedules/reduced_cifar_10/16_wrn.txt" \
-    --hp_policy_epochs 160 \
+    --checkpoint_freq 0 --epochs $7 \
+    --name $3 --gpu 1 --cpu 6 \
+    --use_hp_policy --hp_policy "/data/dho/pba/schedules/$2.txt" #--hp_policy "/data/dho/pba/schedules/reduced_cifar_10/16_wrn.txt" \
+    --hp_policy_epochs 160 --no_cutout \
     --explore cifar10 --aug_policy cifar10 \
-    --lr 0.05 --wd 0.0005
+    --lr $5 --wd $6 --num_samples 5
 }
 
 # name aug_policy lr
@@ -154,7 +160,7 @@ search() {
 
 if [ "$1" = "train-reduced" ]; then
     echo "[bash] train-reduced $@"
-    exit 1
+    train_reduced "$@"
 elif [ "$1" = "train-full" ]; then
     echo "[bash] train-full $@"
     exit 1
