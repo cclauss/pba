@@ -113,9 +113,9 @@ train_reduced_aa() {
     --lr 0.05 --wd 0.005 --bs 128
 }
 
-# ./scripts/svhn.sh reduced_cifar_10/16_wrn rsvhn_cifarpol_wrn_2810 wrn_28_10 0.05 0.05 160 |& tee rsvhn_cifarpol_wrn2810.txt
-# ./scripts/svhn.sh svhn/svhn_2_23_b_policy_15 rsvhn_svhnpol_ss96 shake_shake_96 0.005 0.005 160 |& tee rsvhn_svhnpol_ss96.txt
-# ./scripts/svhn.sh svhn/svhn_2_23_b_policy_15 rsvhn_svhnpol_ss96 shake_shake_96 0.005 0.005 1760 |& tee rsvhn_svhnpol_ss96.txt
+# ./scripts/svhn.sh train-reduced reduced_cifar_10/16_wrn rsvhn_cifarpol_wrn_2810 wrn_28_10 0.05 0.05 160 |& tee rsvhn_cifarpol_wrn2810.txt
+# ./scripts/svhn.sh train-reduced svhn/svhn_2_23_b_policy_15 rsvhn_svhnpol_ss96 shake_shake_96 0.005 0.005 160 |& tee rsvhn_svhnpol_ss96.txt
+# ./scripts/svhn.sh train-reduced svhn/svhn_2_23_b_policy_15 rsvhn_svhnpol_ss96 shake_shake_96 0.005 0.005 1760 |& tee rsvhn_svhnpol_ss96.txt
 
 # [] policy name name model_name lr wd epochs
 train_reduced() {
@@ -125,8 +125,7 @@ train_reduced() {
     --train_size 1000 --val_size 0 --eval_test \
     --checkpoint_freq 0 --epochs $7 \
     --name $3 --gpu 1 --cpu 6 \
-    --use_hp_policy --hp_policy "/data/dho/pba/schedules/$2.txt" #--hp_policy "/data/dho/pba/schedules/reduced_cifar_10/16_wrn.txt" \
-    --hp_policy_epochs 160 --no_cutout \
+    --use_hp_policy --hp_policy "/data/dho/pba/schedules/$2.txt" \
     --explore cifar10 --aug_policy cifar10 \
     --lr $5 --wd $6 --num_samples 5
 }
