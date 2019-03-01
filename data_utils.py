@@ -347,8 +347,10 @@ class DataSet(object):
                 assert "svhn" in self.hparams.dataset
             # Apply cutout
             if not self.hparams.no_cutout:
-                if 'cifar' in self.hparams.dataset:
+                if 'cifar10' == self.hparams.dataset:
                     final_img = self.augmentation_transforms.cutout_numpy(final_img)
+                elif 'cifar100' == self.hparams.dataset:
+                    final_img = self.augmentation_transforms.cutout_numpy(final_img, size=8)
                 else:
                     assert 'svhn' in self.hparams.dataset
                     final_img = self.augmentation_transforms.cutout_numpy(final_img, size=20)
