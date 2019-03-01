@@ -17,7 +17,7 @@ eval() {
         data_path="/data/dho/datasets/cifar-10-batches-py"
     elif [ "$3" == "cf100" ]; then
         size=50000
-        name="cifar100_$1"
+        name="cifar100_$1_8cutout"
         dataset="cifar100"
         data_path="/data/dho/datasets/cifar-100-python"
     else
