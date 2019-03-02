@@ -194,7 +194,12 @@ class DataSet(object):
             else:
                 assert 'cifar' in hparams.dataset
                 self.good_policies = found_policies.good_policies()
-
+    
+    def reset_policy(self, new_hparams):
+        self.hparams = new_hparams
+        self.parse_policy(new_hparams)
+        tf.logging.info("reset aug policy")
+        return
 
     def load_data(self, hparams):
         all_labels = []

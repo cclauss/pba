@@ -38,6 +38,12 @@ class RayModel(Trainable):
     def _restore(self, checkpoint):
         tf.logging.info("RESTORING: {}".format(checkpoint))
         self.trainer.extract_model_spec(checkpoint)
+    
+    def reset_config(self, new_config):
+        self.config = new_config
+        self.hparams = tf.contrib.training.HParams(**new_config)
+        self.trainer.reset_config(self.hparams)
+        return True
 
 
 def main(_):
