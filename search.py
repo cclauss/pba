@@ -77,7 +77,7 @@ def main(_):
         perturbation_interval=FLAGS.perturbation_interval,
         custom_explore_fn=explore)
 
-    run_experiments({FLAGS.name: train_spec}, scheduler=pbt, verbose=True)
+    run_experiments({FLAGS.name: train_spec}, scheduler=pbt, reuse_actors=True, verbose=True)
 
 
 if __name__ == '__main__':

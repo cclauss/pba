@@ -249,7 +249,7 @@ class CifarModelTrainer(object):
     def extract_model_spec(self, checkpoint_path):
         """Loads a checkpoint with the architecture structure stored in the name."""
         self.saver.restore(self.session, checkpoint_path)
-        tf.logging.info('Loaded child model checkpoint from {}'.format(
+        tf.logging.warning('Loaded child model checkpoint from {}'.format(
                         checkpoint_path))
 
     def eval_child_model(self, model, data_loader, mode):
