@@ -114,6 +114,15 @@ search() {
 # CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_i 11-23 0.05 0.01 |& tee svhn_search_2_20_i
 # CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_j 11-23 0.05 0.005 |& tee svhn_search_2_20_j
 # CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_20_h 11-23 0.05 0.02 |& tee svhn_search_2_20_h
+
+CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_23_b cifar10 0.1 0.005 |& tee svhn_search_2_23_b
+CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_23_c cifar10 0.1 0.05 |& tee svhn_search_2_23_c
+CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_23_e cifar10 0.1 0.025 |& tee svhn_search_2_23_e
+
+
+CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_23_d cifar10 0.1 0.01 |& tee svhn_search_2_23_d
+CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_23_a cifar10 0.2 0.005 |& tee svhn_search_2_23_a
+CUDA_VISIBLE_DEVICES=0 ./scripts/svhn.sh search svhn_search_2_23_f cifar10 0.1 0.1 |& tee svhn_search_2_23_f
 # ./scripts/svhn.sh train-reduced
 
 if [ "$1" = "train-reduced" ]; then
