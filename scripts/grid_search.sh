@@ -30,12 +30,68 @@ svhn_wrn_40_2_grid_search() {
     --explore cifar10 --no_cutout --name "svhn_gs"
 }
 
+svhn_pba_wrn_40_2_grid_search() {
+    echo "[bash] SVHN Grid Search w/ wrn_40_2, policy ${1}"
+    python grid_search.py \
+    --local_dir /data/dho/ray_results_2/svhn_grid_search \
+    --model_name wrn_40_2 --dataset svhn \
+    --gpu 0.166 --cpu 1 \
+    --train_size 1000 --val_size 0 --eval_test \
+    --checkpoint_freq 0 \
+    --explore cifar10 --no_cutout --name "pba_gs_$2_wrn402" \
+    --hp_policy_epochs 160 --epochs 160 \
+    --use_hp_policy --hp_policy "/data/dho/pba/schedules/svhn/$2.txt" 
+}
+
+svhn_pba_wrn_28_10_grid_search() {
+    echo "[bash] SVHN Grid Search w/ wrn_28_10, policy ${1}"
+    python grid_search.py \
+    --local_dir /data/dho/ray_results_2/svhn_grid_search \
+    --model_name wrn_28_10 --dataset svhn \
+    --gpu 1 --cpu 8 \
+    --train_size 1000 --val_size 0 --eval_test \
+    --checkpoint_freq 0 \
+    --explore cifar10 --no_cutout --name "pba_gs_$2_wrn2810" \
+    --hp_policy_epochs 160 --epochs 160 \
+    --use_hp_policy --hp_policy "/data/dho/pba/schedules/svhn/$2.txt"
+}
+
+svhn_pba_ss_96_grid_search() {
+    echo "[bash] SVHN Grid Search w/ ss96, policy ${1}"
+    python grid_search.py \
+    --local_dir /data/dho/ray_results_2/svhn_grid_search \
+    --model_name shake_shake_96 --dataset svhn \
+    --gpu 0.5 --cpu 4 \
+    --train_size 1000 --val_size 0 --eval_test \
+    --checkpoint_freq 0 \
+    --explore cifar10 --no_cutout --name "pba_gs_lr_ss96" \
+    --hp_policy_epochs 160 --no_cutout \
+    --use_hp_policy --hp_policy "/data/dho/pba/schedules/svhn/svhn_2_23_b_policy_15.txt"
+}
+
+# ./scripts/grid_search.sh svhn_pba_wrn_40_2 svhn_2_23_b_policy_15
+# ./scripts/grid_search.sh svhn_pba_wrn_40_2 svhn_2_23_d_policy_11
+# ./scripts/grid_search.sh svhn_pba_wrn_28_10 svhn_2_23_b_policy_15
+# ./scripts/grid_search.sh svhn_pba_wrn_28_10 svhn_2_23_d_policy_11
+
+# ./scripts/grid_search.sh svhn_pba_ss_96 svhn_2_23_b_policy_15
+# ./scripts/grid_search.sh svhn_pba_ss_96 svhn_2_23_d_policy_11
+
 if [ "$1" = "aug_11-23" ]; then
     echo "[bash] $@"
     wrn_40_2_grid_search 11-23
 elif [ "$1" = "svhn" ]; then
     echo "[bash] $@"
     svhn_wrn_40_2_grid_search
+elif [ "$1" = "svhn_pba_wrn_40_2" ]; then
+    echo "[bash] $@"
+    svhn_pba_wrn_40_2_grid_search "$@"
+elif [ "$1" = "svhn_pba_wrn_28_10" ]; then
+    echo "[bash] $@"
+    svhn_pba_wrn_28_10_grid_search "$@"
+elif [ "$1" = "svhn_pba_ss_96" ]; then
+    echo "[bash] $@"
+    svhn_pba_ss_96_grid_search "$@"
 else
     echo "invalid args"
 fi

@@ -358,6 +358,11 @@ class CifarModelTrainer(object):
                 training_accuracy, valid_accuracy))
         return training_accuracy, valid_accuracy
 
+    def reset_config(self, new_hparams):
+        self.hparams = new_hparams
+        self.data_loader.reset_policy(new_hparams)
+        return
+
     @property
     def saver(self):
         return self._saver

@@ -194,7 +194,12 @@ class DataSet(object):
             else:
                 assert 'cifar' in hparams.dataset
                 self.good_policies = found_policies.good_policies()
-
+    
+    def reset_policy(self, new_hparams):
+        self.hparams = new_hparams
+        self.parse_policy(new_hparams)
+        tf.logging.info("reset aug policy")
+        return
 
     def load_data(self, hparams):
         all_labels = []
@@ -347,7 +352,13 @@ class DataSet(object):
                 assert "svhn" in self.hparams.dataset
             # Apply cutout
             if not self.hparams.no_cutout:
-                final_img = self.augmentation_transforms.cutout_numpy(final_img)
+                if 'cifar10' == self.hparams.dataset:
+                    final_img = self.augmentation_transforms.cutout_numpy(final_img)
+                elif 'cifar100' == self.hparams.dataset:
+                    final_img = self.augmentation_transforms.cutout_numpy(final_img, size=8)
+                else:
+                    assert 'svhn' in self.hparams.dataset
+                    final_img = self.augmentation_transforms.cutout_numpy(final_img, size=20)
             final_imgs.append(final_img)
         batched_data = (np.array(final_imgs, np.float32), labels)
         self.curr_train_index += self.hparams.batch_size
