@@ -43,7 +43,7 @@ class RayModel(Trainable):
         self.config = new_config
         if reset_state:
             tf.logging.warning("Re-initializing all variables")
-            self.trainer._session.run([self.m.init, self.meval.init])
+            self.trainer._session.run([self.trainer.m.init, self.trainer.meval.init])
         self.hparams = tf.contrib.training.HParams(**new_config)
         self.trainer.reset_config(self.hparams)
         return True
