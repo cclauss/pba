@@ -39,11 +39,8 @@ class RayModel(Trainable):
         tf.logging.info("RESTORING: {}".format(checkpoint))
         self.trainer.extract_model_spec(checkpoint)
     
-    def reset_config(self, new_config, reset_state):
+    def reset_config(self, new_config):
         self.config = new_config
-        if reset_state:
-            tf.logging.warning("Re-initializing all variables")
-            self.trainer._session.run([self.trainer.m.init, self.trainer.meval.init])
         self.hparams = tf.contrib.training.HParams(**new_config)
         self.trainer.reset_config(self.hparams)
         return True
