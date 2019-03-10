@@ -1,3 +1,6 @@
+#!/bin/bash
+
+
 eval_svhn() {
     echo "model: $1, trials: 4"
 
