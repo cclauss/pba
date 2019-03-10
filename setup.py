@@ -173,7 +173,7 @@ def create_hparams(state, FLAGS):
             hparams.add_hparam('lr', 0.025)
             hparams.add_hparam('weight_decay_rate', 0.0025)
         elif FLAGS.dataset == 'svhn' or FLAGS.dataset == 'svhn-full':
-            hparams.add_hparam('lr', 0.1)  # or 0.01
+            hparams.add_hparam('lr', 0.01)  # or 0.01
             hparams.add_hparam('weight_decay_rate', 0.00015)
         else:
             raise ValueError()
