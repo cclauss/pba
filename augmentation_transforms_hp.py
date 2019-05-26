@@ -104,7 +104,28 @@ def apply_policy(policy, img, aug_policy, dset):
     else:
         return img
 
+# Fixed count of augmenations
 def policy_verbose(img, count, policy):
+    ops = ""
+    pil_img = pil_wrap(img, 'svhn_1000')
+    random.shuffle(policy)
+    for xform in policy:
+        assert len(xform) == 3
+        name, probability, level = xform
+        assert 0. <= probability <= 1.
+        assert 0 <= level <= PARAMETER_MAX
+        xform_fn = NAME_TO_TRANSFORM[name].pil_transformer(probability, level)
+        pil_img, res = xform_fn(pil_img)
+        count -= res
+        if res > 0:
+            ops += "{},{},{}\n".format(name, probability, level)
+        assert count >= 0
+        if count == 0:  # TODO: make this a hyperparam
+            break
+    return (pil_unwrap(pil_img, 'svhn_1000'), ops)
+
+
+def policy_verbose_2(img, policy):
     ops = ""
     pil_img = pil_wrap(img, 'svhn_1000')
     random.shuffle(policy)

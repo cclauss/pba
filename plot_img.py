@@ -93,6 +93,7 @@ for _ in range(10):
         axes[0][i].set(title=titles[i])
         # f = ax.get_figure()
         # f.subplots_adjust(top=0.95)
+    select = [0, 1, 2, 4, 5,6,7,8,18, 19, 30, 28, 34, 40, 43, 46, 49, 123, 26]
 
     # for ax in axes.flat:
         # ax.label_outer()
